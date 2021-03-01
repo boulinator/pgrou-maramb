@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_saisie">
+
+    <fragment
+        android:id="@+id/navigation_saisie"
+        android:name="com.example.maramb.ui.saisie.SaisieFragment"
+        android:label="Saisie"
+        tools:layout="@layout/fragment_saisie" />
+
+    <fragment
+        android:id="@+id/navigation_ra"
+        android:name="com.example.maramb.ui.ra.RaFragment"
+        android:label="RA"
+        tools:layout="@layout/fragment_ra" />
+
+    <fragment
+        android:id="@+id/navigation_carte"
+        android:name="com.example.maramb.ui.carte.CarteFragment"
+        android:label="@string/title_carte"
+        tools:layout="@layout/fragment_carte" />
+
+    <fragment
+        android:id="@+id/navigation_compte"
+        android:name="com.example.maramb.ui.compte.CompteFragment"
+        android:label="@string/title_compte"
+        tools:layout="@layout/fragment_compte" />
+
+
+</navigation>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_saisie"
+        android:icon="@drawable/ic_add_location_alt_black_24dp"
+        android:title="Saisie" />
+
+    <item
+        android:id="@+id/navigation_carte"
+        android:icon="@drawable/ic_world_black_24dp"
+        android:title="Carte" />
+
+    <item
+        android:id="@+id/navigation_ra"
+        android:icon="@drawable/ic_view_in_ar_black_24dp"
+        android:title="RA" />
+
+    <item
+        android:id="@+id/navigation_compte"
+        android:icon="@drawable/ic_account_box_black_24dp"
+        android:title="Compte" />
+
+</menu>
