@@ -22,13 +22,14 @@ public class CompteFragment extends Fragment {
         compteViewModel =
                 new ViewModelProvider(this).get(CompteViewModel.class);
         View root = inflater.inflate(R.layout.fragment_compte, container, false);
+        /*
         final TextView textView = root.findViewById(R.id.text_compte);
         compteViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
-        });
+        });*/
         return root;
     }
 }

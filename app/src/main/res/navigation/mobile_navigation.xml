@@ -9,7 +9,11 @@
         android:id="@+id/navigation_saisie"
         android:name="com.example.maramb.ui.saisie.SaisieFragment"
         android:label="Saisie"
-        tools:layout="@layout/fragment_saisie" />
+        tools:layout="@layout/fragment_saisie" >
+        <action
+            android:id="@+id/action_navigation_saisie_to_navigation_compte"
+            app:destination="@id/navigation_compte" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_ra"
@@ -21,12 +25,20 @@
         android:id="@+id/navigation_carte"
         android:name="com.example.maramb.ui.carte.CarteFragment"
         android:label="@string/title_carte"
-        tools:layout="@layout/fragment_carte" />
+        tools:layout="@layout/fragment_carte" >
+        <action
+            android:id="@+id/action_navigation_carte_to_navigation_ra"
+            app:destination="@id/navigation_ra" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_compte"
         android:name="com.example.maramb.ui.compte.CompteFragment"
         android:label="@string/title_compte"
-        tools:layout="@layout/fragment_compte" />
+        tools:layout="@layout/fragment_compte" >
+        <action
+            android:id="@+id/action_navigation_compte_to_navigation_carte"
+            app:destination="@id/navigation_carte" />
+    </fragment>
 
 </navigation>
