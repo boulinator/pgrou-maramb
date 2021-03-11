@@ -39,6 +39,8 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 
+import com.example.maramb.utilsMap;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class CarteFragment extends Fragment {
@@ -66,25 +68,20 @@ public class CarteFragment extends Fragment {
         mapController = (MapController) map.getController();
         mapController.setZoom(18.0);
 
-        requestPermissionsIfNecessary(new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.INTERNET, ACCESS_FINE_LOCATION
-        });
+        utilsMap.requestPermissionsIfNecessary((Fragment)this,
+                new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.INTERNET, ACCESS_FINE_LOCATION},
+                LOCATION_PERMISSION_REQUEST_CODE);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.ALWAYS);
         map.setMultiTouchControls(true);
-
-//        CompassOverlay compassOverlay = new CompassOverlay(getContext(), map);
-//        compassOverlay.enableCompass();
-//        map.getOverlays().add(compassOverlay);
 
         //GeoPoint startPoint = new GeoPoint(47.214429, -1.558497);
         //mapController.setCenter(startPoint);
 
-        //this.mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(ctx), map);
-        //map.getOverlays().add(this.mLocationOverlay);
-
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        //for demo, getLastKnownLocation from GPS only, not from NETWORK
+        //for now, getLastKnownLocation from GPS only, not from NETWORK
         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -100,7 +97,7 @@ public class CarteFragment extends Fragment {
             lastLocation.setLongitude(-1.558497);
             lastLocation.setLatitude(47.214429);
         }
-        GeoPoint currentPoint = updateLoc(lastLocation);
+        GeoPoint currentPoint = utilsMap.updateLoc(lastLocation, mapController, map);
 
         Marker startMarker = new Marker(map);
         startMarker.setPosition(currentPoint);
@@ -138,20 +135,13 @@ public class CarteFragment extends Fragment {
         locationManager.removeUpdates(myLocationListener);
     }
 
-    private GeoPoint updateLoc(Location loc){
-        GeoPoint locGeoPoint = new GeoPoint(loc.getLatitude(), loc.getLongitude());
-        mapController.setCenter(locGeoPoint);
-        map.invalidate();
-        return locGeoPoint;
-    }
-
     private LocationListener myLocationListener
             = new LocationListener(){
 
         @Override
         public void onLocationChanged(Location location) {
             // TODO Auto-generated method stub
-            updateLoc(location);
+            utilsMap.updateLoc(location, mapController, map);
         }
 
         @Override
@@ -176,31 +166,7 @@ public class CarteFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (int i = 0; i < grantResults.length; i++) {
-            permissionsToRequest.add(permissions[i]);
-        }
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                    getActivity(),
-                    permissionsToRequest.toArray(new String[0]),
-                    LOCATION_PERMISSION_REQUEST_CODE);
-        }
+        utilsMap.onRequestPermissionsResult((Fragment) this, requestCode, permissions, grantResults);
     }
 
-    private void requestPermissionsIfNecessary(String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(getContext(), permission)
-                    != PackageManager.PERMISSION_GRANTED) {
-                permissionsToRequest.add(permission);
-            }
-        }
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                    getActivity(),
-                    permissionsToRequest.toArray(new String[0]),
-                    LOCATION_PERMISSION_REQUEST_CODE);
-        }
-    }
 }
