@@ -2,6 +2,7 @@ package com.example.maramb;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -50,5 +51,7 @@ public class utilsMap {
         map.invalidate();
         return locGeoPoint;
     }
+
+
 
 }

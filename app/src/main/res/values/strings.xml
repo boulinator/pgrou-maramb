@@ -21,4 +21,12 @@
     <string name="icone_compte">Icone compte</string>
     <string name="compte_description">Compte</string>
     <string name="app_description">"Bienvenue dans l'application Maramb ! "</string>
+    <string name="recap">Récapitulatif de mon marqueur</string>
+
+    <string name="marqueur1">Marqueur 1</string>
+    <string name="marqueur2">Marqueur 2</string>
+    <string name="marqueur3">Marqueur 3</string>
+    <string name="other">Valider et saisir un autre marqueur</string>
+    <string name="envoyer_marqueur">Envoyer mon marqueur</string>
+    <string name="recap_image">Image récapitulatif</string>
 </resources>
