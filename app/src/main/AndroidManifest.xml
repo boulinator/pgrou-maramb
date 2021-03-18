@@ -19,6 +19,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Maramb">
+        <activity android:name=".CreerCompteActivity"
+                  android:parentActivityName=".ConnexionActivity"/>
+        <activity android:name=".ConnexionActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.android.fileprovider"
@@ -26,8 +30,9 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
         <activity android:name=".FirstActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +42,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_saisie"></activity>
+            android:label="@string/title_activity_saisie" />
     </application>
 
 </manifest>

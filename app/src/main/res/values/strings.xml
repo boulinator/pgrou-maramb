@@ -29,4 +29,13 @@
     <string name="other">Valider et saisir un autre marqueur</string>
     <string name="envoyer_marqueur">Envoyer mon marqueur</string>
     <string name="recap_image">Image récapitulatif</string>
+    <string name="connexion_nomUtilisateur">Nom d\'utilisateur</string>
+    <string name="connexion_mdp">Mot de passe</string>
+    <string name="connexion_connexion">Connexion</string>
+    <string name="connexion_nouvCompte">Créer un compte</string>
+    <string name="connexion_textIdentifiants">Identifiants</string>
+    <string name="connexion_prenom">Prénom</string>
+    <string name="connexion_nom">Nom</string>
+    <string name="connexion_informations">Informations</string>
+    <string name="connexion_numTel">Numéro de téléphone</string>
 </resources>
