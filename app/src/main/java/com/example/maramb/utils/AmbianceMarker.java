@@ -1,47 +1,71 @@
 package com.example.maramb.utils;
 
+import android.graphics.Bitmap;
+import android.os.Bundle;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class AmbianceMarker {
 
-    private String placeName;
-
-    // Mot utilisé pour décrire l'endroit :
-    private String ambianceName;
+    private int markerID;
 
     private GeoPoint location;
 
+    private String placeName;
+
+    // Mots utilisé pour décrire l'endroit :
+    private List<String> ambianceNames;
+
+    // Scores pour chaque mot :
+    private List<Float> scores;
+
     private LocalDate date;
+
+    private Bitmap photo;
 
     private int userID;
 
-    public AmbianceMarker(String placeName, String ambianceName, GeoPoint location, LocalDate date, int userID){
-        this.placeName = placeName;
-        this.ambianceName = ambianceName;
+    public AmbianceMarker(int markerID, GeoPoint location, String placeName, List<String> ambianceName,  List<Float> scores, LocalDate date, Bitmap photo, int userID){
+        this.markerID = markerID;
         this.location = location;
+        this.placeName = placeName;
+        this.ambianceNames = ambianceNames;
+        this.scores = scores;
         this.date = date;
+        this.photo = photo;
         this.userID = userID;
     }
 
-    public String getPlaceName(){return this.placeName;}
-
-    public String getAmbianceName(){return this.ambianceName;}
+    public Integer getMarkerID(){return this.markerID;}
 
     public GeoPoint getLocation(){return this.location;}
 
+    public String getPlaceName(){return this.placeName;}
+
+    public List<String> getAmbianceName(){return this.ambianceNames;}
+
+    public List<Float> getScores(){return this.scores;}
+
     public LocalDate getDate(){return this.date;}
+
+    public Bitmap getPhoto(){return this.photo;}
 
     public int getUserID(){return this.userID;}
 
-    public void setPlaceName(String placeName) {this.placeName = placeName;}
-
-    public void setAmbianceName(String ambianceName) {this.ambianceName = ambianceName;}
-
     public void setLocation(GeoPoint location) {this.location = location;}
 
+    public void setPlaceName(String placeName) {this.placeName = placeName;}
+
+    public void setAmbianceName(List<String> ambianceNames) {this.ambianceNames = ambianceNames;}
+
+    public void setScores(List<Float> scores) {this.scores = scores;}
+
     public void setDate(LocalDate date) {this.date = date;}
+
+    public void setPhoto(Bitmap photo) {this.photo = photo;}
 
     public void setUserID(int userID) {this.userID = userID;}
 }

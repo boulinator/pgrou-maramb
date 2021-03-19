@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.maramb.ui.carte.CarteFragment;
+import com.example.maramb.ui.carte.CarteFragment2;
 import com.example.maramb.ui.compte.CompteFragment;
 import com.example.maramb.ui.ra.RaFragment;
 import com.example.maramb.ui.saisie.SaisieFragment;
@@ -21,10 +22,12 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import org.osmdroid.views.overlay.Marker;
+
 public class  MainActivity extends AppCompatActivity {
     final Fragment fragment1 = new SaisieFragment();
     final Fragment fragment2 = new RaFragment();
-    final Fragment fragment3 = new CarteFragment();
+    //final Fragment fragment3 = new CarteFragment();
     final Fragment fragment4 = new CompteFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active;
@@ -62,10 +65,10 @@ public class  MainActivity extends AppCompatActivity {
                     active = fragment2;
                     return true;
 
-                case R.id.navigation_ra:
-                    fm.beginTransaction().hide(active).show(fragment3).commit();
-                    active = fragment3;
-                    return true;
+//                case R.id.navigation_ra:
+//                    fm.beginTransaction().hide(active).show(fragment3).commit();
+//                    active = fragment3;
+//                    return true;
 
                 case R.id.navigation_compte:
                     fm.beginTransaction().hide(active).show(fragment4).commit();

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.maramb.ui.carte.CarteActivity;
+
 public class FirstActivity extends AppCompatActivity {
 
     LinearLayoutCompat saisieLayout;
@@ -32,8 +34,8 @@ public class FirstActivity extends AppCompatActivity {
 
         carteLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent myIntent = new Intent(FirstActivity.this, MainActivity.class);
-                myIntent.putExtra("key", R.id.navigation_carte);
+                Intent myIntent = new Intent(FirstActivity.this, CarteActivity.class);
+                //myIntent.putExtra("key", R.id.navigation_carte);
                 startActivity(myIntent);
             }
         });

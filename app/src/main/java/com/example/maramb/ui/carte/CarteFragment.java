@@ -22,8 +22,11 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.maramb.MainActivity;
 import com.example.maramb.R;
@@ -43,6 +46,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 
 import com.example.maramb.ui.saisie.SaisieFragment2;
+import com.example.maramb.utils.AmbianceMarker;
 import com.example.maramb.utils.DBAcces;
 import com.example.maramb.utils.utilsMap;
 import com.example.maramb.utils.utilsMap;
@@ -88,7 +92,7 @@ public class CarteFragment extends Fragment {
         map = root.findViewById(R.id.mapview2);
         map.setTileSource(TileSourceFactory.MAPNIK);
         mapController = (MapController) map.getController();
-        mapController.setZoom(18.0);
+        mapController.setZoom(15.0);
 
         utilsMap.requestPermissionsIfNecessary((Fragment)this,
                 new String[]{
@@ -153,6 +157,7 @@ public class CarteFragment extends Fragment {
     public void actionOnMarkerHit(ArrayList<Marker> listMarkers){
         for (int i = 0 ; i < listMarkers.size(); i++){
             Marker currentMarker = listMarkers.get(i);
+            // NavController navController = NavHostFragment.findNavController(this);
             currentMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView map) {

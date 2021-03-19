@@ -15,6 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.maramb.R;
 import com.example.maramb.ui.ra.RaViewModel;
+import com.example.maramb.utils.AmbianceMarker;
+
+import java.util.HashMap;
 
 public class CarteFragment2 extends Fragment {
     private CarteViewModel carteViewModel;
@@ -31,6 +34,9 @@ public class CarteFragment2 extends Fragment {
                 textView.setText(s);
             }
         });
+
+        HashMap<Integer, AmbianceMarker> allAmbiancesMarkers = ((CarteActivity)getActivity()).getAmbianceMarkers();
+
         return root;
     }
 }
