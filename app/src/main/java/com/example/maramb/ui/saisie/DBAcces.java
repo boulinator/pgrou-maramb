@@ -1,12 +1,15 @@
 package com.example.maramb.ui.saisie;
 
-import android.os.AsyncTask;
+import org.osmdroid.util.GeoPoint;
+import org.postgresql.geometric.PGpoint;
+import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class DBAcces {
 
@@ -99,6 +102,55 @@ public class DBAcces {
             this.status = false;
         }
         return place;
+    }
+
+
+    /**
+     * Récupérer un GeoPoint pour chaque marqueur de la bdd
+     */
+    public ArrayList<GeoPoint> getPlaces() {
+        ArrayList<GeoPoint> ListGeopoints = new ArrayList<>();
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                try {
+                    Connection con = connect();
+                    String query = "SELECT ST_AsText(GeomFromEWKT(geometry)) FROM marqueursimple";
+
+                    PreparedStatement stmt = con.prepareStatement(query);
+
+                    ResultSet rs = stmt.executeQuery();
+
+                    while( rs.next() ) {
+
+                        String geom = (String) rs.getObject(1);
+
+                        String delims = "[( )]";
+                        String[] tokens = geom.split(delims);
+
+                        double longi = Double.parseDouble(tokens[1]);
+                        double lat = Double.parseDouble(tokens[2]);
+
+                        GeoPoint geoPoint = new GeoPoint(lat, longi);
+                        ListGeopoints.add(geoPoint);
+                    }
+
+                    con.close();
+                    System.out.println("Connection fermée");
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.status = false;
+        }
+        return ListGeopoints;
     }
 }
 
