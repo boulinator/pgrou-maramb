@@ -1,5 +1,8 @@
 package com.example.maramb.utils;
 
+import com.example.maramb.MainActivity;
+import com.example.maramb.R;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.sql.Connection;
@@ -8,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -161,7 +165,7 @@ public class DBAcces {
 
 
 
-    public void writeMarker(AmbianceMarker marker){
+    public void writeMarker(AmbianceMarker marker, ArrayList<Integer> ambiancesint){
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
@@ -174,6 +178,8 @@ public class DBAcces {
                     int placeid = marker.getPlaceID();
                     java.sql.Date sqlDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
                     byte[] image = marker.getPhoto();
+                    ArrayList<String> ambiances = marker.getAmbianceName();
+                    ArrayList<Integer> scores = marker.getScores();
 
                     String queryAddLocation = "INSERT INTO image (imageid, image) VALUES (DEFAULT,?)" +
                             " RETURNING imageid";
@@ -185,7 +191,7 @@ public class DBAcces {
 
 
                     String queryAddMarker = "INSERT INTO marqueur(marqueurid, datecreation, imageid," +
-                            "placeid, localisation) VALUES (DEFAULT,?,?,?,ST_Point(?,?))" +
+                            "placeid, localisation) VALUES (DEFAULT,?,?,?,ST_SetSRID(ST_MakePoint(?,?),4326))" +
                             "RETURNING marqueurid";
 
                     PreparedStatement stmtAddMarker = con.prepareStatement(queryAddMarker);
@@ -197,10 +203,20 @@ public class DBAcces {
                     ResultSet rsAddMarker = stmtAddMarker.executeQuery();
                     rsAddMarker.next();
                     int markerid = rsAddMarker.getInt(1);
+                    int i = 0;
+                    for (int score : scores){
+                        System.out.println(score);
+                        int indice = ambiancesint.get(i);
+                        String queryAddAmbiance = "INSERT INTO decrit(marqueurid, motid, valeurmarqueur)" +
+                                "VALUES (?,?,?)";
+                        PreparedStatement stmtAddAmbiance = con.prepareStatement(queryAddAmbiance);
+                        stmtAddAmbiance.setInt(1,markerid);
+                        stmtAddAmbiance.setInt(2,indice+1);
+                        stmtAddAmbiance.setInt(3,score);
+                        stmtAddAmbiance.executeUpdate();
+                        i += 1;
+                    }
 
-                    String queryAddAmbiance = "INSERT INTO ambiance(marqueurid, datecreation, imageid," +
-                            "placeid, localisation) VALUES (DEFAULT,?,?,?,ST_Point(?,?))" +
-                            "RETURNING marqueurid";
 
 
 

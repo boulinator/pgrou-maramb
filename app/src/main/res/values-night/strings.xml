@@ -24,10 +24,28 @@
     <string name="app_description">"Bienvenue dans l'application Maramb ! "</string>
     <string name="recap">Récapitulatif de mon marqueur</string>
 
-    <string name="marqueur1">Marqueur 1</string>
-    <string name="marqueur2">Marqueur 2</string>
-    <string name="marqueur3">Marqueur 3</string>
     <string name="other">Valider ce marqueur</string>
     <string name="envoyer_marqueur">Envoyer mon marqueur</string>
     <string name="recap_image">Image récapitulatif</string>
+    <string-array name="marqueurs">
+        <item name="agreable">Agréable</item>
+        <item name="chaleureux">Chaleureux</item>
+        <item name="convivial">Convivial</item>
+        <item name="froid">Froid</item>
+        <item name="lumineux">Lumineux</item>
+        <item name="calme">Calme</item>
+        <item name="relaxant">Relaxant</item>
+        <item name="joyeux">Joyeux</item>
+        <item name="musical">Musical</item>
+        <item name="anime">Animé</item>
+        <item name="agite">Agité</item>
+        <item name="feerique">Féerique</item>
+        <item name="bruyant">Bruyant</item>
+        <item name="degage">Dégagé</item>
+        <item name="dangeureux">Dangeureux</item>
+        <item name="frequente">Frequente</item>
+        <item name="populaire">Populaire</item>
+        <item name="chic">Chic</item>
+        <item name="desert">Désert</item>
+    </string-array>
 </resources>

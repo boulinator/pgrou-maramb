@@ -61,6 +61,7 @@ public class SaisieFragment4 extends Fragment {
         Uri photoUri = Uri.parse(bundle.getString("photo"));
         photo.setImageURI(photoUri);
 
+        ArrayList<Integer> marqueursid = bundle.getIntegerArrayList("marqueursid");
         Double latitude = bundle.getDouble("latitude");
         Double longitude = bundle.getDouble("longitude");
         GeoPoint location = new GeoPoint(latitude, longitude);
@@ -100,7 +101,7 @@ public class SaisieFragment4 extends Fragment {
                     Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
                     byte[] inputData = getBytes(iStream);
                     AmbianceMarker marker = new AmbianceMarker(0,location,placeName,marqueurs,score, date,inputData,0,placeID);
-                    db.writeMarker(marker);
+                    db.writeMarker(marker, marqueursid);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
