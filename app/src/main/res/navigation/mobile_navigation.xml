@@ -3,16 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_ra">
+    app:startDestination="@+id/navigation_carte">
 
     <fragment
         android:id="@+id/navigation_saisie"
         android:name="com.example.maramb.ui.saisie.SaisieFragment"
         android:label="Saisie"
         tools:layout="@layout/fragment_saisie" >
-        <action
-            android:id="@+id/action_navigation_saisie_to_navigation_compte"
-            app:destination="@id/navigation_compte" />
     </fragment>
 
     <fragment
@@ -40,5 +37,6 @@
             android:id="@+id/action_navigation_compte_to_navigation_carte"
             app:destination="@id/navigation_carte" />
     </fragment>
+
 
 </navigation>
