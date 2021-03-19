@@ -47,7 +47,7 @@ public class utilsMap {
 
     public static GeoPoint updateLoc(Location loc, MapController mapController, MapView map){
         GeoPoint locGeoPoint = new GeoPoint(loc.getLatitude(), loc.getLongitude());
-        mapController.setCenter(locGeoPoint);
+        // mapController.setCenter(locGeoPoint);
         map.invalidate();
         return locGeoPoint;
     }
