@@ -17,8 +17,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.maramb.R;
+import com.example.maramb.utils.AmbianceMarker;
+import com.example.maramb.utils.DBAcces;
 
+import org.osmdroid.util.GeoPoint;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.sql.Date;
 
 public class SaisieFragment4 extends Fragment {
 
@@ -30,6 +40,7 @@ public class SaisieFragment4 extends Fragment {
     ProgressBar progress2;
     ProgressBar progress3;
     Button sendButton;
+    DBAcces db;
 
     public SaisieFragment4(){}
 
@@ -50,6 +61,13 @@ public class SaisieFragment4 extends Fragment {
         Uri photoUri = Uri.parse(bundle.getString("photo"));
         photo.setImageURI(photoUri);
 
+        Double latitude = bundle.getDouble("latitude");
+        Double longitude = bundle.getDouble("longitude");
+        GeoPoint location = new GeoPoint(latitude, longitude);
+        db = new DBAcces();
+        ArrayList place = db.locationToPlace(latitude,longitude);
+        String placeName = place.get(0).toString();
+        Integer placeID = (Integer)place.get(1);
         ArrayList<String> marqueurs = bundle.getStringArrayList("marqueurs");
         ArrayList<Integer> score = bundle.getIntegerArrayList("score");
         marqueur1.setText(marqueurs.get(0));
@@ -72,10 +90,38 @@ public class SaisieFragment4 extends Fragment {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputStream iStream = null;
+                try {
+                    iStream = getActivity().getContentResolver().openInputStream(photoUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+                    byte[] inputData = getBytes(iStream);
+                    AmbianceMarker marker = new AmbianceMarker(0,location,placeName,marqueurs,score, date,inputData,0,placeID);
+                    db.writeMarker(marker);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
 
             }
         });
 
         return root;
+    }
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
     }
 }

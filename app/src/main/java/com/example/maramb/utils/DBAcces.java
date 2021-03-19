@@ -1,8 +1,6 @@
 package com.example.maramb.utils;
 
 import org.osmdroid.util.GeoPoint;
-import org.postgresql.geometric.PGpoint;
-import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class DBAcces {
 
@@ -19,6 +19,7 @@ public class DBAcces {
     private Connection connection;
     private boolean status;
     String place;
+    ArrayList returned;
 
     public DBAcces() {
         connect();
@@ -65,14 +66,15 @@ public class DBAcces {
         return c;
     }
 
-    public String locationToPlace(double lati, double longi) {
+    public ArrayList locationToPlace(double lati, double longi) {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
                 try {
+                    returned = new ArrayList();
                     Connection con = connect();
-                    String query1 = "SELECT placelibelle FROM place where placelibelle = ? LIMIT 1;";
-                    String query = "SELECT placelibelle FROM place "
+                    String query1 = "SELECT placelibelle, placeid FROM place where placelibelle = ? LIMIT 1;";
+                    String query = "SELECT placelibelle, placeid FROM place "
                             + "ORDER BY ST_Distance(ST_SetSRID(ST_MakePoint(?,?),4326),place.geometry)"
                             + " LIMIT 1;";
 
@@ -83,7 +85,11 @@ public class DBAcces {
 
                     ResultSet rs = stmt.executeQuery();
                     rs.next();
+                    Integer placeid = rs.getInt("placeid");
                     place = rs.getString("placelibelle");
+
+                    returned.add(place);
+                    returned.add(placeid);
                     System.out.println(rs.getString("placelibelle"));
 
                     con.close();
@@ -101,7 +107,7 @@ public class DBAcces {
             e.printStackTrace();
             this.status = false;
         }
-        return place;
+        return returned;
     }
 
 
@@ -152,5 +158,70 @@ public class DBAcces {
         }
         return ListGeopoints;
     }
+
+
+
+    public void writeMarker(AmbianceMarker marker){
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                try {
+                    Connection con = connect();
+
+                    GeoPoint location = marker.getLocation();
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    int placeid = marker.getPlaceID();
+                    java.sql.Date sqlDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+                    byte[] image = marker.getPhoto();
+
+                    String queryAddLocation = "INSERT INTO image (imageid, image) VALUES (DEFAULT,?)" +
+                            " RETURNING imageid";
+                    PreparedStatement stmtAddLocation = con.prepareStatement(queryAddLocation);
+                    stmtAddLocation.setBytes(1, image);
+                    ResultSet rsAddLocation = stmtAddLocation.executeQuery();
+                    rsAddLocation.next();
+                    int imageid = rsAddLocation.getInt(1);
+
+
+                    String queryAddMarker = "INSERT INTO marqueur(marqueurid, datecreation, imageid," +
+                            "placeid, localisation) VALUES (DEFAULT,?,?,?,ST_Point(?,?))" +
+                            "RETURNING marqueurid";
+
+                    PreparedStatement stmtAddMarker = con.prepareStatement(queryAddMarker);
+                    stmtAddMarker.setDate(1,sqlDate);
+                    stmtAddMarker.setInt(2,imageid);
+                    stmtAddMarker.setInt(3,placeid);
+                    stmtAddMarker.setDouble(4,longitude);
+                    stmtAddMarker.setDouble(5,latitude);
+                    ResultSet rsAddMarker = stmtAddMarker.executeQuery();
+                    rsAddMarker.next();
+                    int markerid = rsAddMarker.getInt(1);
+
+                    String queryAddAmbiance = "INSERT INTO ambiance(marqueurid, datecreation, imageid," +
+                            "placeid, localisation) VALUES (DEFAULT,?,?,?,ST_Point(?,?))" +
+                            "RETURNING marqueurid";
+
+
+
+                    con.close();
+                    System.out.println("Connection fermée2");
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.status = false;
+        }
+    }
 }
+
+
+
 

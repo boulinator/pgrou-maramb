@@ -5,7 +5,10 @@ import android.os.Bundle;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.lang.reflect.Array;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AmbianceMarker {
@@ -17,18 +20,21 @@ public class AmbianceMarker {
     private String placeName;
 
     // Mots utilisé pour décrire l'endroit :
-    private List<String> ambianceNames;
+    private ArrayList<String> ambianceNames;
 
     // Scores pour chaque mot :
-    private List<Float> scores;
+    private ArrayList<Integer> scores;
 
-    private LocalDate date;
+    private Date date;
 
-    private Bitmap photo;
+    private byte[] photo;
 
     private int userID;
 
-    public AmbianceMarker(int markerID, GeoPoint location, String placeName, List<String> ambianceName,  List<Float> scores, LocalDate date, Bitmap photo, int userID){
+    private int placeID;
+
+    public AmbianceMarker(int markerID, GeoPoint location, String placeName, ArrayList<String> ambianceName, ArrayList<Integer> scores, Date date, byte[] photo, int userID, int placeID) {
+
         this.markerID = markerID;
         this.location = location;
         this.placeName = placeName;
@@ -37,7 +43,9 @@ public class AmbianceMarker {
         this.date = date;
         this.photo = photo;
         this.userID = userID;
+        this.placeID = placeID;
     }
+
 
     public Integer getMarkerID(){return this.markerID;}
 
@@ -45,13 +53,15 @@ public class AmbianceMarker {
 
     public String getPlaceName(){return this.placeName;}
 
-    public List<String> getAmbianceName(){return this.ambianceNames;}
+    public ArrayList<String> getAmbianceName(){return this.ambianceNames;}
 
-    public List<Float> getScores(){return this.scores;}
+    public ArrayList<Integer> getScores(){return this.scores;}
 
-    public LocalDate getDate(){return this.date;}
+    public Date getDate(){return this.date;}
 
-    public Bitmap getPhoto(){return this.photo;}
+    public byte[] getPhoto(){return this.photo;}
+
+    public int getPlaceID(){return this.placeID;}
 
     public int getUserID(){return this.userID;}
 
@@ -59,13 +69,15 @@ public class AmbianceMarker {
 
     public void setPlaceName(String placeName) {this.placeName = placeName;}
 
-    public void setAmbianceName(List<String> ambianceNames) {this.ambianceNames = ambianceNames;}
+    public void setAmbianceName(ArrayList<String> ambianceNames) {this.ambianceNames = ambianceNames;}
 
-    public void setScores(List<Float> scores) {this.scores = scores;}
+    public void setScores(ArrayList<Integer> scores) {this.scores = scores;}
 
-    public void setDate(LocalDate date) {this.date = date;}
+    public void setDate(Date date) {this.date = date;}
 
-    public void setPhoto(Bitmap photo) {this.photo = photo;}
+    public void setPhoto(byte[] photo) {this.photo = photo;}
 
     public void setUserID(int userID) {this.userID = userID;}
+
+    public void setPlaceID(int placeID){this.placeID = placeID;}
 }
