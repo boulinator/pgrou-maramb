@@ -1,4 +1,4 @@
-package com.example.maramb.ui.saisie;
+package com.example.maramb.utils;
 
 import org.osmdroid.util.GeoPoint;
 import org.postgresql.geometric.PGpoint;

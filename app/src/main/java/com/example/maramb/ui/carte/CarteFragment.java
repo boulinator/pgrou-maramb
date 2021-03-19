@@ -39,8 +39,10 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 
-import com.example.maramb.utilsMap;
-import com.example.maramb.ui.saisie.DBAcces;
+import com.example.maramb.utils.DBAcces;
+import com.example.maramb.utils.utilsMap;
+import com.example.maramb.utils.utilsMap;
+import com.example.maramb.utils.DBAcces;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -59,7 +61,7 @@ public class CarteFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_saisie4, container, false);
+        View root = inflater.inflate(R.layout.fragment_carte, container, false);
 
         Context ctx = this.getActivity().getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -77,7 +79,7 @@ public class CarteFragment extends Fragment {
     }
 
     private void initMap(Context ctx, View root) {
-        map = root.findViewById(R.id.mapview);
+        map = root.findViewById(R.id.mapview2);
         map.setTileSource(TileSourceFactory.MAPNIK);
         mapController = (MapController) map.getController();
         mapController.setZoom(18.0);
@@ -139,11 +141,6 @@ public class CarteFragment extends Fragment {
         }
         return markersList;
     }
-
-    private void getTags() {
-
-    }
-
 
     @Override
     public void onResume() {

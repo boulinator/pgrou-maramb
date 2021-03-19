@@ -1,4 +1,4 @@
-package com.example.maramb;
+package com.example.maramb.utils;
 
 import android.content.pm.PackageManager;
 import android.location.Location;

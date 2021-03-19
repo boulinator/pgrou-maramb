@@ -21,7 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.maramb.R;
-import com.example.maramb.utilsMap;
+import com.example.maramb.utils.utilsMap;
+import com.example.maramb.utils.utilsMap;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
