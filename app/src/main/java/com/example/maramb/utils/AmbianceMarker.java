@@ -20,7 +20,7 @@ public class AmbianceMarker {
     private List<String> ambianceNames;
 
     // Scores pour chaque mot :
-    private List<Float> scores;
+    private List<Integer> scores;
 
     private LocalDate date;
 
@@ -28,7 +28,7 @@ public class AmbianceMarker {
 
     private int userID;
 
-    public AmbianceMarker(int markerID, GeoPoint location, String placeName, List<String> ambianceName,  List<Float> scores, LocalDate date, Bitmap photo, int userID){
+    public AmbianceMarker(int markerID, GeoPoint location, String placeName, List<String> ambianceName,  List<Integer> scores, LocalDate date, Bitmap photo, int userID){
         this.markerID = markerID;
         this.location = location;
         this.placeName = placeName;
@@ -47,7 +47,7 @@ public class AmbianceMarker {
 
     public List<String> getAmbianceName(){return this.ambianceNames;}
 
-    public List<Float> getScores(){return this.scores;}
+    public List<Integer> getScores(){return this.scores;}
 
     public LocalDate getDate(){return this.date;}
 
@@ -61,7 +61,7 @@ public class AmbianceMarker {
 
     public void setAmbianceName(List<String> ambianceNames) {this.ambianceNames = ambianceNames;}
 
-    public void setScores(List<Float> scores) {this.scores = scores;}
+    public void setScores(List<Integer> scores) {this.scores = scores;}
 
     public void setDate(LocalDate date) {this.date = date;}
 
