@@ -2,6 +2,7 @@ package com.example.maramb.ui.saisie;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
@@ -66,17 +67,15 @@ public class SaisieFragment2 extends Fragment {
 
         Bundle bundle = this.getArguments();
         assert bundle != null;
-        byte[] data = bundle.getByteArray("key");
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0,
-                data.length);
-        imageView.setImageBitmap(bitmap);
+        Uri photoUri = Uri.parse(bundle.getString("key"));
+        imageView.setImageURI(photoUri);
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 score = vote.getProgress();
                 result.add(score);
                 Bundle bundle2 = new Bundle();
-                bundle2.putByteArray("photo",data);
+                bundle2.putString("photo",photoUri.toString());
                 bundle2.putIntegerArrayList("score",result);
                 bundle2.putStringArrayList("marqueurs",marqueurs);
 

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,55 +36,45 @@ public class SaisieFragment extends Fragment {
 
     public SaisieFragment(){}
 
-    private SaisieViewModel saisieViewModel;
-    ImageView imageView;
-    ImageButton buttonCamera;
     private String currentPhotoPath;
     private Intent intent;
+    private Uri photoURI;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_saisie, container, false);
-        //imageView = (ImageView)root.findViewById(R.id.imageView);
-        //buttonCamera = root.findViewById(R.id.button_camera);
         intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Log.d("photo save error", "erreur dans l'enregistrement de la photo");
+            }
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(getContext(),
+                        "com.example.android.fileprovider",
+                        photoFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                galleryAddPic();
+            }
+        }
+
         return root;
-    };
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
                 Bundle bundle = new Bundle();
-
-                /*File photoFile = null;
-                try {
-                    File file = createImageFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(getContext(),
-                            "com.example.android.fileprovider",
-                            photoFile);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                }
-
-                galleryAddPic();*/
-
                 SaisieFragment2 nextFrag= new SaisieFragment2();
 
-                Bitmap bmp = (Bitmap) data.getExtras().get("data");
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-                bmp.compress(Bitmap.CompressFormat.PNG,100, stream);
-                byte[] byteArray = stream.toByteArray();
-                bundle.putByteArray("key",byteArray);
+                bundle.putString("key", photoURI.toString());
                 nextFrag.setArguments(bundle);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
