@@ -22,6 +22,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import com.example.maramb.MainActivity;
 import com.example.maramb.R;
@@ -154,12 +156,8 @@ public class CarteFragment extends Fragment {
             currentMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView map) {
-                    CarteFragment2 nextFrag= new CarteFragment2();
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.nav_host_fragment, nextFrag, "findThisFragment")
-                            .addToBackStack("premier")
-                            .commit();
-                    return false;
+                    Navigation.findNavController(map).navigate(R.id.action_navigation_carte_to_navigation_carte2);
+                    return true;
                 }
         });
         }
