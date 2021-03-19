@@ -2,6 +2,7 @@ package com.example.maramb.ui.carte;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -39,6 +40,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 
+import com.example.maramb.ui.saisie.SaisieFragment2;
 import com.example.maramb.utils.DBAcces;
 import com.example.maramb.utils.utilsMap;
 import com.example.maramb.utils.utilsMap;
@@ -74,6 +76,8 @@ public class CarteFragment extends Fragment {
             positionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
             map.getOverlays().add(positionMarker);
         }
+
+        actionOnMarkerHit(listMarkers);
 
         return root;
     }
@@ -111,6 +115,8 @@ public class CarteFragment extends Fragment {
             return;
         }
 
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
+
         Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (lastLocation == null){
             lastLocation = new Location("dummyprovider");
@@ -140,6 +146,23 @@ public class CarteFragment extends Fragment {
             markersList.add(positionMarker);
         }
         return markersList;
+    }
+
+    public void actionOnMarkerHit(ArrayList<Marker> listMarkers){
+        for (int i = 0 ; i < listMarkers.size(); i++){
+            Marker currentMarker = listMarkers.get(i);
+            currentMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView map) {
+                    CarteFragment2 nextFrag= new CarteFragment2();
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.nav_host_fragment, nextFrag, "findThisFragment")
+                            .addToBackStack("premier")
+                            .commit();
+                    return false;
+                }
+        });
+        }
     }
 
     @Override
