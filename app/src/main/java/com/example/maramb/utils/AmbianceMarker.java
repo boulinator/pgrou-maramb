@@ -33,7 +33,7 @@ public class AmbianceMarker {
 
     private int placeID;
 
-    public AmbianceMarker(int markerID, GeoPoint location, String placeName, ArrayList<String> ambianceName, ArrayList<Integer> scores, Date date, byte[] photo, int userID, int placeID) {
+    public AmbianceMarker(int markerID, GeoPoint location, String placeName, ArrayList<String> ambianceNames, ArrayList<Integer> scores, Date date, byte[] photo, int userID, int placeID) {
 
         this.markerID = markerID;
         this.location = location;

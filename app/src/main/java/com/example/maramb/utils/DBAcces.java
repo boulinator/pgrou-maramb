@@ -32,7 +32,7 @@ public class DBAcces {
     }
 
 
-    private Connection connect() {
+    public Connection connect() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -70,13 +70,12 @@ public class DBAcces {
         return c;
     }
 
-    public ArrayList locationToPlace(double lati, double longi) {
+    public ArrayList locationToPlace(Connection con, double lati, double longi) {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
                 try {
                     returned = new ArrayList();
-                    Connection con = connect();
                     String query1 = "SELECT placelibelle, placeid FROM place where placelibelle = ? LIMIT 1;";
                     String query = "SELECT placelibelle, placeid FROM place "
                             + "ORDER BY ST_Distance(ST_SetSRID(ST_MakePoint(?,?),4326),place.geometry)"
@@ -96,7 +95,6 @@ public class DBAcces {
                     returned.add(placeid);
                     System.out.println(rs.getString("placelibelle"));
 
-                    con.close();
                     System.out.println("Connection fermée");
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -165,13 +163,11 @@ public class DBAcces {
 
 
 
-    public void writeMarker(AmbianceMarker marker, ArrayList<Integer> ambiancesint){
+    public void writeMarker(Connection con, AmbianceMarker marker){
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
                 try {
-                    Connection con = connect();
-
                     GeoPoint location = marker.getLocation();
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
@@ -206,22 +202,16 @@ public class DBAcces {
                     int i = 0;
                     for (int score : scores){
                         System.out.println(score);
-                        int indice = ambiancesint.get(i);
                         String queryAddAmbiance = "INSERT INTO decrit(marqueurid, motid, valeurmarqueur)" +
-                                "VALUES (?,?,?)";
+                                "VALUES (?,(SELECT motid from mot where motlibelle = LOWER(?)),?)";
                         PreparedStatement stmtAddAmbiance = con.prepareStatement(queryAddAmbiance);
                         stmtAddAmbiance.setInt(1,markerid);
-                        stmtAddAmbiance.setInt(2,indice+1);
+                        stmtAddAmbiance.setString(2,ambiances.get(i));
                         stmtAddAmbiance.setInt(3,score);
                         stmtAddAmbiance.executeUpdate();
                         i += 1;
                     }
-
-
-
-
                     con.close();
-                    System.out.println("Connection fermée2");
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }

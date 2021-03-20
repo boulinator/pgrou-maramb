@@ -50,20 +50,13 @@ public class SaisieFragment2 extends Fragment {
     int score;
     ArrayList<Integer> result = new ArrayList<>();
     ArrayList<String> marqueurs;
-    ArrayList<Integer> marqueursid = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                                 ViewGroup container, Bundle savedInstanceState) {
 
         final View root = inflater.inflate(R.layout.fragment_saisie2, container, false);
         marqueurs = new ArrayList<>(Arrays. asList(getResources().getStringArray(R.array.marqueurs)));
-        for (int i = 0; i < marqueurs.size() ; i++){
-            marqueursid.add(i);
-        }
-        Random r = new Random();
-        int seedValue = r.nextInt(100);
-        Collections.shuffle(marqueurs, new Random(seedValue));
-        Collections.shuffle(marqueursid, new Random(seedValue));
+        Collections.shuffle(marqueurs);
         imageView = (ImageView) root.findViewById(R.id.imageView);
         nextButton = (Button) root.findViewById(R.id.nextButton);
         vote = (SeekBar) root.findViewById(R.id.seekBar);
@@ -85,7 +78,6 @@ public class SaisieFragment2 extends Fragment {
                 bundle2.putString("photo",photoUri.toString());
                 bundle2.putIntegerArrayList("score",result);
                 bundle2.putStringArrayList("marqueurs",marqueurs);
-                bundle2.putIntegerArrayList("marqueursid", marqueursid);
 
                 Fragment nextFrag = new SaisieFragment3();
                 nextFrag.setArguments(bundle2);
