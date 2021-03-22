@@ -23,6 +23,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.maramb.R;
 
@@ -41,10 +42,11 @@ public class SaisieFragment extends Fragment {
     private Uri photoURI;
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_saisie, container, false);
+        root = inflater.inflate(R.layout.fragment_saisie, container, false);
         intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -67,20 +69,13 @@ public class SaisieFragment extends Fragment {
         return root;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    public void onActivityResult(int requestCode, int resultCode,Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
                 Bundle bundle = new Bundle();
-                SaisieFragment2 nextFrag= new SaisieFragment2();
-
                 bundle.putString("key", photoURI.toString());
-                nextFrag.setArguments(bundle);
-
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag, "findThisFragment")
-                        .addToBackStack("premier")
-                        .commit();
+                Navigation.findNavController(root).navigate(R.id.action_navigation_saisie_to_saisieFragment2, bundle);
             }
         }
     }

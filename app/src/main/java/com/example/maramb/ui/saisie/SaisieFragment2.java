@@ -1,12 +1,9 @@
 package com.example.maramb.ui.saisie;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.app.FragmentTransaction;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,28 +13,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.maramb.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.w3c.dom.Text;
-
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 
 public class SaisieFragment2 extends Fragment {
 
@@ -78,14 +61,10 @@ public class SaisieFragment2 extends Fragment {
                 bundle2.putString("photo",photoUri.toString());
                 bundle2.putIntegerArrayList("score",result);
                 bundle2.putStringArrayList("marqueurs",marqueurs);
+                Navigation.findNavController(v).navigate(R.id.action_navigation_saisie_to_saisieFragment3, bundle2);
 
-                Fragment nextFrag = new SaisieFragment3();
-                nextFrag.setArguments(bundle2);
 
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag, "findThisFragment")
-                        .addToBackStack("second")
-                        .commit();
+
             }
         });
 
@@ -96,7 +75,7 @@ public class SaisieFragment2 extends Fragment {
                 result.add(score);
                 text.setText(marqueurs.get(result.size()));
                 vote.setProgress(0);
-                if (result.size() == marqueurs.size()-1){
+                if (result.size() == 4){
                     otherButton.setVisibility(View.GONE);
                 }
 
@@ -104,6 +83,4 @@ public class SaisieFragment2 extends Fragment {
         });
         return root;
     }
-
-
 }

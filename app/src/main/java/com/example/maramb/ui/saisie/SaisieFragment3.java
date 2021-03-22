@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.maramb.R;
 import com.example.maramb.utils.utilsMap;
@@ -131,13 +132,8 @@ public class SaisieFragment3 extends Fragment {
                 bundle.putDouble("latitude",startMarker.getPosition().getLatitude());
                 bundle.putDouble("longitude",startMarker.getPosition().getLongitude());
 
-                SaisieFragment4 nextFrag = new SaisieFragment4();
-                nextFrag.setArguments(bundle);
+                Navigation.findNavController(root).navigate(R.id.action_navigation_saisie_to_saisieFragment4, bundle);
 
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag, "findThisFragment")
-                        .addToBackStack("troisieme")
-                        .commit();
             }
         });
 

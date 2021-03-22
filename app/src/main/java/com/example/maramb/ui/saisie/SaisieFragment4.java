@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.maramb.R;
 import com.example.maramb.utils.AmbianceMarker;
@@ -32,17 +34,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.sql.Date;
 
-public class SaisieFragment4 extends Fragment {
+public class SaisieFragment4 extends Fragment{
 
     ImageView photo;
     TextView marqueur1;
     TextView marqueur2;
     TextView marqueur3;
+    TextView marqueur4;
+    TextView marqueur5;
     ProgressBar progress1;
     ProgressBar progress2;
     ProgressBar progress3;
+    ProgressBar progress4;
+    ProgressBar progress5;
+
     Button sendButton;
     DBAcces db;
+    ConstraintLayout layout;
 
     public SaisieFragment4(){}
 
@@ -54,11 +62,15 @@ public class SaisieFragment4 extends Fragment {
         marqueur1=root.findViewById(R.id.recap_marqueur1);
         marqueur2=root.findViewById(R.id.recap_marqueur2);
         marqueur3=root.findViewById(R.id.recap_marqueur3);
+        marqueur4=root.findViewById(R.id.recap_marqueur4);
+        marqueur5=root.findViewById(R.id.recap_marqueur5);
         progress1=root.findViewById(R.id.recap_progress1);
         progress2=root.findViewById(R.id.recap_progress2);
         progress3=root.findViewById(R.id.recap_progress3);
+        progress4=root.findViewById(R.id.recap_progress4);
+        progress5=root.findViewById(R.id.recap_progress5);
         sendButton=root.findViewById(R.id.recap_button_send);
-
+        layout=root.findViewById(R.id.layout);
         assert bundle != null;
         Uri photoUri = Uri.parse(bundle.getString("photo"));
         photo.setImageURI(photoUri);
@@ -72,6 +84,8 @@ public class SaisieFragment4 extends Fragment {
         progress1.setProgress(score.get(0));
         progress2.setVisibility(View.GONE);
         progress3.setVisibility(View.GONE);
+        progress4.setVisibility(View.GONE);
+        progress5.setVisibility(View.GONE);
 
 
         if (score.size()>1){
@@ -82,8 +96,19 @@ public class SaisieFragment4 extends Fragment {
                 progress3.setVisibility(View.VISIBLE);
                 marqueur3.setText(marqueurs.get(2));
                 progress3.setProgress(score.get(2));
+                if(score.size()>3){
+                    progress4.setVisibility(View.VISIBLE);
+                    marqueur4.setText(marqueurs.get(3));
+                    progress4.setProgress(score.get(3));
+                    if(score.size()>4){
+                        progress5.setVisibility(View.VISIBLE);
+                        marqueur5.setText(marqueurs.get(4));
+                        progress5.setProgress(score.get(4));
+                    }
+                }
             }
         }
+
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
