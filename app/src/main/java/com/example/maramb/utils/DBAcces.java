@@ -1,10 +1,11 @@
 package com.example.maramb.utils;
 
+import com.example.maramb.MainActivity;
+import com.example.maramb.R;
+
 import android.graphics.Bitmap;
 
 import org.osmdroid.util.GeoPoint;
-import org.postgresql.geometric.PGpoint;
-import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,6 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,6 +28,7 @@ public class DBAcces {
     private Connection connection;
     private boolean status;
     String place;
+    ArrayList returned;
 
     public DBAcces() {
         connect();
@@ -32,7 +37,7 @@ public class DBAcces {
     }
 
 
-    private Connection connect() {
+    public Connection connect() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -70,14 +75,14 @@ public class DBAcces {
         return c;
     }
 
-    public String locationToPlace(double lati, double longi) {
+    public ArrayList locationToPlace(Connection con, double lati, double longi) {
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
                 try {
-                    Connection con = connect();
-                    String query1 = "SELECT placelibelle FROM place where placelibelle = ? LIMIT 1;";
-                    String query = "SELECT placelibelle FROM place "
+                    returned = new ArrayList();
+                    String query1 = "SELECT placelibelle, placeid FROM place where placelibelle = ? LIMIT 1;";
+                    String query = "SELECT placelibelle, placeid FROM place "
                             + "ORDER BY ST_Distance(ST_SetSRID(ST_MakePoint(?,?),4326),place.geometry)"
                             + " LIMIT 1;";
 
@@ -88,10 +93,13 @@ public class DBAcces {
 
                     ResultSet rs = stmt.executeQuery();
                     rs.next();
+                    Integer placeid = rs.getInt("placeid");
                     place = rs.getString("placelibelle");
+
+                    returned.add(place);
+                    returned.add(placeid);
                     System.out.println(rs.getString("placelibelle"));
 
-                    con.close();
                     System.out.println("Connection fermée");
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -106,7 +114,7 @@ public class DBAcces {
             e.printStackTrace();
             this.status = false;
         }
-        return place;
+        return returned;
     }
 
 
@@ -156,6 +164,72 @@ public class DBAcces {
             this.status = false;
         }
         return ListGeopoints;
+    }
+
+
+
+    public void writeMarker(Connection con, AmbianceMarker marker){
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                try {
+                    GeoPoint location = marker.getLocation();
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    int placeid = marker.getPlaceID();
+                    java.sql.Date sqlDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+                    byte[] image = marker.getPhoto();
+                    ArrayList<String> ambiances = marker.getAmbianceName();
+                    ArrayList<Integer> scores = marker.getScores();
+
+                    String queryAddLocation = "INSERT INTO image (imageid, image) VALUES (DEFAULT,?)" +
+                            " RETURNING imageid";
+                    PreparedStatement stmtAddLocation = con.prepareStatement(queryAddLocation);
+                    stmtAddLocation.setBytes(1, image);
+                    ResultSet rsAddLocation = stmtAddLocation.executeQuery();
+                    rsAddLocation.next();
+                    int imageid = rsAddLocation.getInt(1);
+
+
+                    String queryAddMarker = "INSERT INTO marqueur(marqueurid, datecreation, imageid," +
+                            "placeid, localisation) VALUES (DEFAULT,?,?,?,ST_SetSRID(ST_MakePoint(?,?),4326))" +
+                            "RETURNING marqueurid";
+
+                    PreparedStatement stmtAddMarker = con.prepareStatement(queryAddMarker);
+                    stmtAddMarker.setDate(1,sqlDate);
+                    stmtAddMarker.setInt(2,imageid);
+                    stmtAddMarker.setInt(3,placeid);
+                    stmtAddMarker.setDouble(4,longitude);
+                    stmtAddMarker.setDouble(5,latitude);
+                    ResultSet rsAddMarker = stmtAddMarker.executeQuery();
+                    rsAddMarker.next();
+                    int markerid = rsAddMarker.getInt(1);
+                    int i = 0;
+                    for (int score : scores){
+                        System.out.println(score);
+                        String queryAddAmbiance = "INSERT INTO decrit(marqueurid, motid, valeurmarqueur)" +
+                                "VALUES (?,(SELECT motid from mot where motlibelle = LOWER(?)),?)";
+                        PreparedStatement stmtAddAmbiance = con.prepareStatement(queryAddAmbiance);
+                        stmtAddAmbiance.setInt(1,markerid);
+                        stmtAddAmbiance.setString(2,ambiances.get(i));
+                        stmtAddAmbiance.setInt(3,score);
+                        stmtAddAmbiance.executeUpdate();
+                        i += 1;
+                    }
+                    con.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.status = false;
+        }
     }
 
     public HashMap<Integer, AmbianceMarker> getExistingMarkers(){
@@ -241,4 +315,7 @@ public class DBAcces {
     }
 
 }
+
+
+
 
