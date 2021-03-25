@@ -43,10 +43,19 @@ public class SaisieFragment extends Fragment {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     View root;
+    ImageButton photoButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_saisie, container, false);
+        photoButton = root.findViewById(R.id.photo_button);
+        photoButton.setOnClickListener(v -> startImageCapture());
+        startImageCapture();
+        return root;
+    }
+
+
+    public void startImageCapture(){
         intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -65,8 +74,6 @@ public class SaisieFragment extends Fragment {
                 galleryAddPic();
             }
         }
-
-        return root;
     }
 
 

@@ -26,6 +26,9 @@
     <string name="other">Valider et saisir un autre marqueur</string>
     <string name="envoyer_marqueur">Envoyer mon marqueur</string>
     <string name="recap_image">Image récapitulatif</string>
+    <string name="finmarqueur">Envoi du marqueur réussi !</string>
+    <string name="newmarker">Nouveau marqueur</string>
+    <string name="takepicture">Prendre une photo</string>
     <string-array name="marqueurs">
         <item name="agreable">Agréable</item>
         <item name="chaleureux">Chaleureux</item>

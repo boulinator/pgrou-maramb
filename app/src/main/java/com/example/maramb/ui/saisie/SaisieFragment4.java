@@ -1,5 +1,6 @@
 package com.example.maramb.ui.saisie;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -11,11 +12,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.maramb.R;
@@ -75,8 +78,8 @@ public class SaisieFragment4 extends Fragment{
         Uri photoUri = Uri.parse(bundle.getString("photo"));
         photo.setImageURI(photoUri);
 
-        Double latitude = bundle.getDouble("latitude");
-        Double longitude = bundle.getDouble("longitude");
+        double latitude = bundle.getDouble("latitude");
+        double longitude = bundle.getDouble("longitude");
         GeoPoint location = new GeoPoint(latitude, longitude);
         ArrayList<String> marqueurs = bundle.getStringArrayList("marqueurs");
         ArrayList<Integer> score = bundle.getIntegerArrayList("score");
@@ -110,33 +113,32 @@ public class SaisieFragment4 extends Fragment{
         }
 
 
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                InputStream iStream = null;
-                try {
-                    iStream = getActivity().getContentResolver().openInputStream(photoUri);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    db = new DBAcces();
-                    Connection con = db.connect();
-                    ArrayList place = db.locationToPlace(con, latitude,longitude);
-                    String placeName = place.get(0).toString();
-                    Integer placeID = (Integer)place.get(1);
-                    Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-                    byte[] inputData = new byte[0];
-                    inputData = getBytes(iStream);
-                    AmbianceMarker marker = new AmbianceMarker(0,location,placeName,marqueurs,score, date,inputData,0,placeID);
-                    db.writeMarker(con, marker);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-
+        sendButton.setOnClickListener(v -> {
+            InputStream iStream = null;
+            try {
+                iStream = getActivity().getContentResolver().openInputStream(photoUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
+            try {
+                db = new DBAcces();
+                Connection con = db.connect();
+                ArrayList place = db.locationToPlace(con, latitude,longitude);
+                String placeName = place.get(0).toString();
+                int placeID = (Integer)place.get(1);
+                Date date = new Date(Calendar.getInstance().getTime().getTime());
+                byte[] inputData;
+                inputData = getBytes(iStream);
+                AmbianceMarker marker = new AmbianceMarker(0,location,placeName,marqueurs,score, date,inputData,0,placeID);
+                db.writeMarker(con, marker);
+                Navigation.findNavController(root).navigate(R.id.action_navigation_saisie_to_saisieFragment5);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(),"Echec de l'envoi du marqueur", Toast.LENGTH_SHORT).show();
+            }
+
+
+
         });
 
         return root;
@@ -147,7 +149,7 @@ public class SaisieFragment4 extends Fragment{
         int bufferSize = 1024;
         byte[] buffer = new byte[bufferSize];
 
-        int len = 0;
+        int len;
         while ((len = inputStream.read(buffer)) != -1) {
             byteBuffer.write(buffer, 0, len);
         }
