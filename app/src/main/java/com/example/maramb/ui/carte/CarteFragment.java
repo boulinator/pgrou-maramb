@@ -44,6 +44,8 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.example.maramb.ui.saisie.SaisieFragment2;
 import com.example.maramb.utils.AmbianceMarker;
@@ -76,7 +78,10 @@ public class CarteFragment extends Fragment {
 
         initMap(ctx, root);
 
-        ArrayList<Marker> listMarkers = getPlacesInMarkers();
+        DBAcces instance = new DBAcces();
+        HashMap<Integer, AmbianceMarker> existingMarkers = instance.getExistingMarkers();
+
+        ArrayList<Marker> listMarkers = getPlacesInMarkers(existingMarkers);
         for (int i = 0 ; i < listMarkers.size(); i++){
             Marker positionMarker = listMarkers.get(i);
             positionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
@@ -141,14 +146,13 @@ public class CarteFragment extends Fragment {
         map.getController().setCenter(currentLocation);
     }
 
-    private ArrayList<Marker> getPlacesInMarkers(){
-        DBAcces instance = new DBAcces();
-        ArrayList<GeoPoint> placesList = instance.getPlaces();
+    private ArrayList<Marker> getPlacesInMarkers(HashMap<Integer, AmbianceMarker> existingMarkers){
         ArrayList<Marker> markersList = new ArrayList<>();
-        for(int i = 0 ; i < placesList.size(); i++){
-            GeoPoint location = placesList.get(i);
+        for (Map.Entry mapentry : existingMarkers.entrySet()) {
+            AmbianceMarker currentMarker = (AmbianceMarker) mapentry.getValue();
+            GeoPoint currentLocation = currentMarker.getLocation();
             Marker positionMarker = new Marker(map);
-            positionMarker.setPosition(location);
+            positionMarker.setPosition(currentLocation);
             markersList.add(positionMarker);
         }
         return markersList;

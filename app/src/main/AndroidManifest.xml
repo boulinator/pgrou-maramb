@@ -40,9 +40,6 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_saisie" />
-        <activity
-            android:name=".ui.carte.CarteActivity"
-            android:label="CarteActivity"/>
     </application>
 
 </manifest>
