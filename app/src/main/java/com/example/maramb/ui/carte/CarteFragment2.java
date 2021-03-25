@@ -35,7 +35,7 @@ public class CarteFragment2 extends Fragment {
             }
         });
 
-        HashMap<Integer, AmbianceMarker> allAmbiancesMarkers = ((CarteActivity)getActivity()).getAmbianceMarkers();
+
 
         return root;
     }

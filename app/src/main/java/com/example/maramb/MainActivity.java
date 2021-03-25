@@ -27,7 +27,7 @@ import org.osmdroid.views.overlay.Marker;
 public class  MainActivity extends AppCompatActivity {
     final Fragment fragment1 = new SaisieFragment();
     final Fragment fragment2 = new RaFragment();
-    //final Fragment fragment3 = new CarteFragment();
+    final Fragment fragment3 = new CarteFragment();
     final Fragment fragment4 = new CompteFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active;
@@ -65,10 +65,10 @@ public class  MainActivity extends AppCompatActivity {
                     active = fragment2;
                     return true;
 
-//                case R.id.navigation_ra:
-//                    fm.beginTransaction().hide(active).show(fragment3).commit();
-//                    active = fragment3;
-//                    return true;
+                case R.id.navigation_ra:
+                    fm.beginTransaction().hide(active).show(fragment3).commit();
+                    active = fragment3;
+                    return true;
 
                 case R.id.navigation_compte:
                     fm.beginTransaction().hide(active).show(fragment4).commit();
