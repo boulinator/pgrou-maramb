@@ -40,7 +40,6 @@ public class SaisieFragment extends Fragment {
     private String currentPhotoPath;
     private Intent intent;
     private Uri photoURI;
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     View root;
     ImageButton photoButton;
@@ -58,22 +57,21 @@ public class SaisieFragment extends Fragment {
     public void startImageCapture(){
         intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                Log.d("photo save error", "erreur dans l'enregistrement de la photo");
-            }
-            if (photoFile != null) {
-                photoURI = FileProvider.getUriForFile(getContext(),
-                        "com.example.android.fileprovider",
-                        photoFile);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                galleryAddPic();
-            }
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException ex) {
+            Log.d("photo save error", "erreur dans l'enregistrement de la photo");
         }
+        if (photoFile != null) {
+            photoURI = FileProvider.getUriForFile(getContext(),
+                    "com.example.android.fileprovider",
+                    photoFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            galleryAddPic();
+        }
+
     }
 
 
