@@ -6,6 +6,7 @@ import android.os.Bundle;
 import org.osmdroid.util.GeoPoint;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AmbianceMarker {
@@ -17,10 +18,10 @@ public class AmbianceMarker {
     private String placeName;
 
     // Mots utilisé pour décrire l'endroit :
-    private List<String> ambianceNames;
+    private ArrayList<String> ambianceNames;
 
     // Scores pour chaque mot :
-    private List<Integer> scores;
+    private ArrayList<Integer> scores;
 
     private LocalDate date;
 
@@ -28,7 +29,7 @@ public class AmbianceMarker {
 
     private int userID;
 
-    public AmbianceMarker(int markerID, GeoPoint location, String placeName, List<String> ambianceName,  List<Integer> scores, LocalDate date, Bitmap photo, int userID){
+    public AmbianceMarker(int markerID, GeoPoint location, String placeName, ArrayList<String> ambianceName,  ArrayList<Integer> scores, LocalDate date, Bitmap photo, int userID){
         this.markerID = markerID;
         this.location = location;
         this.placeName = placeName;
@@ -45,9 +46,9 @@ public class AmbianceMarker {
 
     public String getPlaceName(){return this.placeName;}
 
-    public List<String> getAmbianceName(){return this.ambianceNames;}
+    public ArrayList<String> getAmbianceName(){return this.ambianceNames;}
 
-    public List<Integer> getScores(){return this.scores;}
+    public ArrayList<Integer> getScores(){return this.scores;}
 
     public LocalDate getDate(){return this.date;}
 
@@ -59,9 +60,9 @@ public class AmbianceMarker {
 
     public void setPlaceName(String placeName) {this.placeName = placeName;}
 
-    public void setAmbianceName(List<String> ambianceNames) {this.ambianceNames = ambianceNames;}
+    public void setAmbianceName(ArrayList<String> ambianceNames) {this.ambianceNames = ambianceNames;}
 
-    public void setScores(List<Integer> scores) {this.scores = scores;}
+    public void setScores(ArrayList<Integer> scores) {this.scores = scores;}
 
     public void setDate(LocalDate date) {this.date = date;}
 

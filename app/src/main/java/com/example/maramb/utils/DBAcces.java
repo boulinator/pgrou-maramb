@@ -1,5 +1,7 @@
 package com.example.maramb.utils;
 
+import android.graphics.Bitmap;
+
 import org.osmdroid.util.GeoPoint;
 import org.postgresql.geometric.PGpoint;
 import org.postgresql.util.PGobject;
@@ -9,7 +11,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class DBAcces {
 
@@ -152,5 +157,88 @@ public class DBAcces {
         }
         return ListGeopoints;
     }
+
+    public HashMap<Integer, AmbianceMarker> getExistingMarkers(){
+        HashMap<Integer, AmbianceMarker> existingMarkers = new HashMap<Integer, AmbianceMarker>;
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                try {
+                    Connection con = connect();
+                    String query = "SELECT marqueur.marqueurid, marqueur.localisation, place.placelibelle, place.placeid, mot.motid, "
+                                    +"decrit.valeurmarqueur, marqueur.datecreation, image.image "
+                                    +"FROM marqueur, place, mot, decrit, image "
+                                    +"WHERE (mot.motid=decrit.motid AND marqueur.marqueurid=decrit.marqueurid AND marqueur.imageid=image.imageid "
+                                    +"AND marqueur.placeid=place.placeid) "
+                                    +"ORDER BY decrit.marqueurid;";
+
+                    PreparedStatement stmt = con.prepareStatement(query);
+
+                    ResultSet rs = stmt.executeQuery();
+
+                    while( rs.next() ) {
+
+                        int marqueurid = (int) rs.getObject(1);
+
+                        if (!existingMarkers.containsKey(marqueurid)){
+                            // Le marqueur n'existe pas dans la map : on le cree
+                            String geom = (String) rs.getObject(2);
+                            String delims = "[( )]";
+                            String[] tokens = geom.split(delims);
+                            double longi = Double.parseDouble(tokens[1]);
+                            double lat = Double.parseDouble(tokens[2]);
+                            GeoPoint location = new GeoPoint(lat, longi);
+
+                            String placelibelle = (String) rs.getObject(3);
+                            int placeid = (int) rs.getObject(4);
+
+                            ArrayList<String> mots = new ArrayList<String>();
+                            String motlibelle = (String) rs.getObject(5);
+                            mots.add(motlibelle);
+
+                            ArrayList<Integer> scores = new ArrayList<Integer>();
+                            int valeurmarqueur = (int) rs.getObject(6);
+                            scores.add(valeurmarqueur);
+
+                            LocalDate date = (LocalDate) rs.getObject(7);
+
+                            // get image
+
+                            AmbianceMarker currentAmbianceMarker = new AmbianceMarker();
+                            existingMarkers.put(marqueurid, currentAmbianceMarker);
+                        } else {
+                            // Le marqueur existe dans la map : on ajoute le mot et le score correspondants
+                            String motlibelle = (String) rs.getObject(5);
+                            ArrayList<String> oldString = existingMarkers.get(marqueurid).getAmbianceName();
+                            oldString.add(motlibelle);
+                            existingMarkers.get(marqueurid).setAmbianceName(oldString);
+
+                            int valeurmarqueur = (int) rs.getObject(6);
+                            ArrayList<Integer> oldInt = existingMarkers.get(marqueurid).getScores();
+                            oldInt.add(valeurmarqueur);
+                            existingMarkers.get(marqueurid).setScores(oldInt);
+                        }
+                    }
+
+                    con.close();
+                    System.out.println("Connection fermée");
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.status = false;
+        }
+
+
+        return existingMarkers;
+    }
+
 }
 
