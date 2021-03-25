@@ -64,6 +64,17 @@
     <fragment
         android:id="@+id/navigation_saisie4"
         android:name="com.example.maramb.ui.saisie.SaisieFragment4"
-        android:label="@layout/fragment_saisie4"/>
+        android:label="@layout/fragment_saisie4">
+    <action
+        android:id="@+id/action_navigation_saisie_to_saisieFragment5"
+        app:destination="@id/navigation_saisie5"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_saisie5"
+        android:name="com.example.maramb.ui.saisie.SaisieFragment5"
+        android:label="@layout/fragment_saisie5"/>
+    <action
+        android:id="@+id/action_navigation_saisie_to_saisieFragment"
+        app:destination="@id/navigation_saisie"/>
 
 </navigation>
