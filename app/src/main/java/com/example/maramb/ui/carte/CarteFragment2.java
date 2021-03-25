@@ -1,109 +1,102 @@
 package com.example.maramb.ui.carte;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.maramb.R;
-import com.example.maramb.ui.ra.RaViewModel;
 import com.example.maramb.utils.AmbianceMarker;
-
-import java.util.HashMap;
+import com.example.maramb.utils.DBAcces;
 
 public class CarteFragment2 extends Fragment {
     private CarteViewModel carteViewModel;
+    ImageView photo;
+    TextView namePlace;
+    TextView marqueur1;
+    TextView marqueur2;
+    TextView marqueur3;
+    TextView marqueur4;
+    TextView marqueur5;
+    ProgressBar progress1;
+    ProgressBar progress2;
+    ProgressBar progress3;
+    ProgressBar progress4;
+    ProgressBar progress5;
+
+    DBAcces db;
+    ConstraintLayout layout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         carteViewModel =
                 new ViewModelProvider(this).get(CarteViewModel.class);
         View root = inflater.inflate(R.layout.fragment_carte2, container, false);
-        final TextView textView = root.findViewById(R.id.text_carte2);
-        carteViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+        Bundle bundle = this.getArguments();
+
+        photo=root.findViewById(R.id.marqueur_image);
+        namePlace = root.findViewById(R.id.marqueur_lieu);
+        marqueur1=root.findViewById(R.id.marqueur_mot1);
+        marqueur2=root.findViewById(R.id.marqueur_mot2);
+        marqueur3=root.findViewById(R.id.marqueur_mot3);
+        marqueur4=root.findViewById(R.id.marqueur_mot4);
+        marqueur5=root.findViewById(R.id.marqueur_mot5);
+        progress1=root.findViewById(R.id.mot_progress1);
+        progress2=root.findViewById(R.id.mot_progress2);
+        progress3=root.findViewById(R.id.mot_progress3);
+        progress4=root.findViewById(R.id.mot_progress4);
+        progress5=root.findViewById(R.id.mot_progress5);
+        layout=root.findViewById(R.id.layout);
+        assert bundle != null;
+        int marker_id = bundle.getInt("key");
+
+        db = new DBAcces();
+        AmbianceMarker currentMarker = db.getMarkerById(marker_id);
+
+        namePlace.setText(currentMarker.getPlaceName());
+
+        byte[] byteArray = currentMarker.getPhoto();
+        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        photo.setImageBitmap(bmp);
+
+        marqueur1.setText(currentMarker.getAmbianceName().get(0));
+        progress1.setProgress(currentMarker.getScores().get(0));
+        progress2.setVisibility(View.GONE);
+        progress3.setVisibility(View.GONE);
+        progress4.setVisibility(View.GONE);
+        progress5.setVisibility(View.GONE);
+
+        if (currentMarker.getScores().size()>1){
+            progress2.setVisibility(View.VISIBLE);
+            marqueur2.setText(currentMarker.getAmbianceName().get(1));
+            progress2.setProgress(currentMarker.getScores().get(1));
+            if(currentMarker.getScores().size()>2){
+                progress3.setVisibility(View.VISIBLE);
+                marqueur3.setText(currentMarker.getAmbianceName().get(2));
+                progress3.setProgress(currentMarker.getScores().get(2));
+                if(currentMarker.getScores().size()>3){
+                    progress4.setVisibility(View.VISIBLE);
+                    marqueur4.setText(currentMarker.getAmbianceName().get(3));
+                    progress4.setProgress(currentMarker.getScores().get(3));
+                    if(currentMarker.getScores().size()>4){
+                        progress5.setVisibility(View.VISIBLE);
+                        marqueur5.setText(currentMarker.getAmbianceName().get(4));
+                        progress5.setProgress(currentMarker.getScores().get(4));
+                    }
+                }
             }
-        });
-
-
+        }
 
         return root;
     }
 }
-
-//package com.example.maramb.ui.carte;
-//
-//import android.os.Bundle;
-//
-//import androidx.fragment.app.Fragment;
-//
-//import android.view.LayoutInflater;
-//import android.view.View;
-//import android.view.ViewGroup;
-//
-//import com.example.maramb.R;
-//
-///**
-// * A simple {@link Fragment} subclass.
-// * Use the {@link CarteFragment2#newInstance} factory method to
-// * create an instance of this fragment.
-// */
-//public class CarteFragment2 extends Fragment {
-//
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-//
-//    public CarteFragment2() {
-//        // Required empty public constructor
-//    }
-//
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment CarteFragment2.
-//     */
-//    // TODO: Rename and change types and number of parameters
-//    public static CarteFragment2 newInstance(String param1, String param2) {
-//        CarteFragment2 fragment = new CarteFragment2();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_carte2, container, false);
-//    }
-//}

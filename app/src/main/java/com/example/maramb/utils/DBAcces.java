@@ -1,12 +1,6 @@
 package com.example.maramb.utils;
 
-import com.example.maramb.MainActivity;
-import com.example.maramb.R;
-
-import android.graphics.Bitmap;
-
 import org.osmdroid.util.GeoPoint;
-import org.postgresql.util.PGobject;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,13 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 import java.util.HashMap;
-import java.util.List;
 
 public class DBAcces {
 
@@ -34,7 +24,6 @@ public class DBAcces {
 
     public DBAcces() {
         connect();
-        //this.disconnect();
         System.out.println("connection status:" + status);
     }
 
@@ -119,57 +108,6 @@ public class DBAcces {
         return returned;
     }
 
-
-    /**
-     * Récupérer un GeoPoint pour chaque marqueur de la bdd
-     */
-    public ArrayList<GeoPoint> getPlaces() {
-        ArrayList<GeoPoint> ListGeopoints = new ArrayList<>();
-        Thread thread = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                try {
-                    Connection con = connect();
-                    String query = "SELECT ST_AsText(GeomFromEWKT(geometry)) FROM marqueursimple";
-
-                    PreparedStatement stmt = con.prepareStatement(query);
-
-                    ResultSet rs = stmt.executeQuery();
-
-                    while( rs.next() ) {
-
-                        String geom = (String) rs.getObject(1);
-
-                        String delims = "[( )]";
-                        String[] tokens = geom.split(delims);
-
-                        double longi = Double.parseDouble(tokens[1]);
-                        double lat = Double.parseDouble(tokens[2]);
-
-                        GeoPoint geoPoint = new GeoPoint(lat, longi);
-                        ListGeopoints.add(geoPoint);
-                    }
-
-                    con.close();
-                    System.out.println("Connection fermée");
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-            }
-
-        });
-        thread.start();
-        try {
-            thread.join();
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.status = false;
-        }
-        return ListGeopoints;
-    }
-
-
-
     public void writeMarker(Connection con, AmbianceMarker marker){
         Thread thread = new Thread(new Runnable(){
             @Override
@@ -234,23 +172,105 @@ public class DBAcces {
         }
     }
 
-    public HashMap<Integer, AmbianceMarker> getExistingMarkers(){
-        HashMap<Integer, AmbianceMarker> existingMarkers = new HashMap<Integer, AmbianceMarker>();
+    public AmbianceMarker getMarkerById(int marqueur_id){
+        AmbianceMarker currentAmbianceMarker = new AmbianceMarker();
+        currentAmbianceMarker.setMarkerID(marqueur_id);
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
                 try {
                     Connection con = connect();
                     System.out.println("Connection OK !");
-//                    String query = "SELECT marqueur.marqueurid, marqueur.localisation, place.placelibelle, place.placeid, mot.motid, "
-//                                    +"decrit.valeurmarqueur, marqueur.datecreation, image.image "
-//                                    +"FROM marqueur, place, mot, decrit, image "
-//                                    +"WHERE (mot.motid=decrit.motid AND marqueur.marqueurid=decrit.marqueurid AND marqueur.imageid=image.imageid "
-//                                    +"AND marqueur.placeid=place.placeid) "
-//                                    +"ORDER BY decrit.marqueurid;";
-                    String query = "SELECT marqueurid, ST_X(localisation), ST_Y(localisation), placelibelle, placeid, motlibelle, valeurmarqueur, datecreation, image "
+                    String query = "SELECT ST_X(localisation), ST_Y(localisation), placelibelle, placeid, motlibelle, valeurmarqueur, datecreation, image "
                             +"FROM marqueur NATURAL JOIN place NATURAL JOIN mot NATURAL JOIN decrit NATURAL JOIN image "
-                            +"ORDER BY marqueurid LIMIT 2;";
+                            +"WHERE marqueurid = ? "
+                            + "ORDER BY marqueurid LIMIT 2;";
+
+                    PreparedStatement stmt = con.prepareStatement(query);
+                    stmt.setDouble(1, marqueur_id);
+
+                    ResultSet rs = stmt.executeQuery();
+
+                    boolean created = false;
+                    while( rs.next() ) {
+
+                        if (!created){
+                            double longi = (double) rs.getObject(1);
+                            double lat = (double) rs.getObject(2);
+                            GeoPoint location = new GeoPoint(lat, longi);
+                            currentAmbianceMarker.setLocation(location);
+
+                            String placelibelle = (String) rs.getObject(3);
+                            currentAmbianceMarker.setPlaceName(placelibelle);
+
+                            int placeid = (int) rs.getObject(4);
+                            currentAmbianceMarker.setPlaceID(placeid);
+
+                            ArrayList<String> mots = new ArrayList<String>();
+                            String motlibelle = (String) rs.getObject(5);
+                            mots.add(motlibelle);
+                            currentAmbianceMarker.setAmbianceName(mots);
+
+                            ArrayList<Integer> scores = new ArrayList<Integer>();
+                            int valeurmarqueur = (int) rs.getObject(6);
+                            scores.add(valeurmarqueur);
+                            currentAmbianceMarker.setScores(scores);
+
+                            Date date = (Date) rs.getObject(7);
+                            currentAmbianceMarker.setDate(date);
+
+                            // get image
+                            byte[] image = (byte[]) rs.getObject(8);
+                            currentAmbianceMarker.setPhoto(image);
+
+                            int userID = 0;
+                            currentAmbianceMarker.setUserID(userID);
+
+                            created = true;
+                        } else {
+                            // Le marqueur existe dans la map : on ajoute le mot et le score correspondants
+                            String motlibelle = (String) rs.getObject(5);
+                            ArrayList<String> oldString = currentAmbianceMarker.getAmbianceName();
+                            oldString.add(motlibelle);
+                            currentAmbianceMarker.setAmbianceName(oldString);
+
+                            int valeurmarqueur = (int) rs.getObject(6);
+                            ArrayList<Integer> oldInt = currentAmbianceMarker.getScores();
+                            oldInt.add(valeurmarqueur);
+                            currentAmbianceMarker.setScores(oldInt);
+                        }
+                    }
+
+                    con.close();
+                    System.out.println("Connection fermée");
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.status = false;
+        }
+
+
+        return currentAmbianceMarker;
+    }
+
+    public HashMap<Integer, GeoPoint> getLocationsAndMarkersID(){
+        HashMap<Integer, GeoPoint> existingMarkers = new HashMap<Integer, GeoPoint>();
+        Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                try {
+                    Connection con = connect();
+                    System.out.println("Connection OK !");
+                    String query = "SELECT marqueurid, ST_X(localisation), ST_Y(localisation) "
+                            +"FROM marqueur ORDER BY marqueurid;";
 
                     PreparedStatement stmt = con.prepareStatement(query);
 
@@ -261,50 +281,12 @@ public class DBAcces {
                         int marqueurid = (int) rs.getObject(1);
 
                         if (!existingMarkers.containsKey(marqueurid)){
-                            // Le marqueur n'existe pas dans la map : on le cree
-                            //String geom = (String) rs.getObject(2);
-//                            String geom = ((PGobject)rs.getObject(2)).toString();
-//                            System.out.println("Type : " + geom);
-//                            String delims = "[( )]";
-//                            String[] tokens = geom.split(delims);
                             double longi = (double) rs.getObject(2);
                             double lat = (double) rs.getObject(3);
                             GeoPoint location = new GeoPoint(lat, longi);
-
-                            String placelibelle = (String) rs.getObject(4);
-                            int placeid = (int) rs.getObject(5);
-
-                            ArrayList<String> mots = new ArrayList<String>();
-                            String motlibelle = (String) rs.getObject(6);
-                            mots.add(motlibelle);
-
-                            ArrayList<Integer> scores = new ArrayList<Integer>();
-                            int valeurmarqueur = (int) rs.getObject(7);
-                            scores.add(valeurmarqueur);
-
-                            Date date = (Date) rs.getObject(8);
-
-                            // get image
-                            byte[] image = (byte[]) rs.getObject(9);
-
-                            int userID = 0;
-
-                            AmbianceMarker currentAmbianceMarker = new AmbianceMarker(marqueurid, location, placelibelle,mots, scores, date, image, userID, placeid);
-                            existingMarkers.put(marqueurid, currentAmbianceMarker);
-                        } else {
-                            // Le marqueur existe dans la map : on ajoute le mot et le score correspondants
-                            String motlibelle = (String) rs.getObject(6);
-                            ArrayList<String> oldString = existingMarkers.get(marqueurid).getAmbianceName();
-                            oldString.add(motlibelle);
-                            existingMarkers.get(marqueurid).setAmbianceName(oldString);
-
-                            int valeurmarqueur = (int) rs.getObject(7);
-                            ArrayList<Integer> oldInt = existingMarkers.get(marqueurid).getScores();
-                            oldInt.add(valeurmarqueur);
-                            existingMarkers.get(marqueurid).setScores(oldInt);
+                            existingMarkers.put(marqueurid, location);
                         }
                     }
-
                     con.close();
                     System.out.println("Connection fermée");
                 } catch (SQLException throwables) {

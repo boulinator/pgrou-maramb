@@ -33,6 +33,8 @@ public class AmbianceMarker {
 
     private int placeID;
 
+    public AmbianceMarker(){}
+
     public AmbianceMarker(int markerID, GeoPoint location, String placeName, ArrayList<String> ambianceNames, ArrayList<Integer> scores, Date date, byte[] photo, int userID, int placeID) {
 
         this.markerID = markerID;
@@ -64,6 +66,8 @@ public class AmbianceMarker {
     public int getPlaceID(){return this.placeID;}
 
     public int getUserID(){return this.userID;}
+
+    public void setMarkerID(int id) {this.markerID = id;}
 
     public void setLocation(GeoPoint location) {this.location = location;}
 
