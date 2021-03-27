@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/connexion_layout"
     tools:context=".ConnexionActivity">
 
     <Button
@@ -22,7 +23,7 @@
         android:layout_width="181dp"
         android:layout_height="150dp"
         android:layout_marginTop="80dp"
-        android:contentDescription="Contact"
+        android:contentDescription="@string/connexion_contact"
         android:src="@drawable/ic_account_box_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -46,13 +47,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
         android:ems="10"
+        android:hint="@string/connexion_nomUtilisateur"
         android:inputType="textPersonName"
-        android:text="@string/connexion_nomUtilisateur"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:text="@string/connexion_nomUtilisateur" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
         android:id="@+id/connexion_mdp"
