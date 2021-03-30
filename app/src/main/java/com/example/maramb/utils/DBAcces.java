@@ -1,5 +1,8 @@
 package com.example.maramb.utils;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.sql.Connection;
@@ -152,7 +155,7 @@ public class DBAcces {
      * @param con connexion
      * @param marker le marqueur a ecrire dans la base
      */
-    public void writeMarker(Connection con, AmbianceMarker marker){
+    public void writeMarker(Connection con, AmbianceMarker marker, Context ctx){
         Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
@@ -203,6 +206,7 @@ public class DBAcces {
                     con.close();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
+                    Toast.makeText(ctx, "Echec de l'envoi du marqueur", Toast.LENGTH_SHORT).show();
                 }
             }
 
