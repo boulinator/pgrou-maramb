@@ -43,6 +43,7 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.2.5.jre7'
     implementation 'org.osmdroid:osmdroid-android:6.1.8'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation "org.mindrot:jbcrypt:0.4"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
