@@ -77,26 +77,13 @@ public class ConnexionActivity extends AppCompatActivity {
                 }
                 ResultSet result = stmt.executeQuery();
                 result.next();
+                con.close();
                 if (result.getInt(1)!=0) {
-                    Intent intent = new Intent(ConnexionActivity.this, FirstActivity.class);
-                    Snackbar.make(findViewById(R.id.connexion_layout),R.string.connexion_msg_succes, Snackbar.LENGTH_SHORT).addCallback(new Snackbar.Callback(){
-                        @Override
-                        public void onDismissed(Snackbar snackbar, int event){
-                            startActivity(intent);
-                        }
-                    }).show();
+                   return true;
                 }
                 else {
-                    Snackbar.make(findViewById(R.id.connexion_layout),R.string.connexion_msg_echec, Snackbar.LENGTH_SHORT).addCallback(new Snackbar.Callback(){
-                        @Override
-                        public void onDismissed(Snackbar snackbar, int event){
-                            ((EditText)findViewById(R.id.connexion_nomUtilisateur)).setText("");
-                            ((EditText)findViewById(R.id.connexion_mdp)).setText("");
-                        }
-                    }).show();
+                    return false;
                 }
-                con.close();
-                return true;
             }
             catch (Exception ex){
                 ex.printStackTrace();
