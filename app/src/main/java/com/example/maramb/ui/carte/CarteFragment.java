@@ -8,21 +8,16 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
-import com.example.maramb.MainActivity;
 import com.example.maramb.R;
 
 import org.osmdroid.config.Configuration;
@@ -32,16 +27,14 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.example.maramb.utilsMap;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import com.example.maramb.utils.DBAcces;
+import com.example.maramb.utils.utilsMap;
 
 public class CarteFragment extends Fragment {
 
@@ -49,7 +42,6 @@ public class CarteFragment extends Fragment {
     private MapController mapController;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     LocationManager locationManager;
-    MyLocationNewOverlay mLocationOverlay;
 
     public CarteFragment() {
     }
@@ -63,50 +55,112 @@ public class CarteFragment extends Fragment {
         Context ctx = this.getActivity().getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
+        // Initialize map and center on my position
+        initMap(ctx, root);
+
+        // Get pins for each marker in the db
+        DBAcces instance = new DBAcces();
+        HashMap<Integer, GeoPoint> existingMarkers = instance.getLocationsAndMarkersID();
+        ArrayList<Integer> ambianceMarkerID = new ArrayList<Integer>();
+        ArrayList<Marker> listMarkers = getPlacesInMarkers(existingMarkers, ambianceMarkerID);
+        for (int i = 0 ; i < listMarkers.size(); i++){
+            Marker positionMarker = listMarkers.get(i);
+            positionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+            map.getOverlays().add(positionMarker);
+        }
+
+        actionOnMarkerHit(listMarkers, ambianceMarkerID);
+
+        return root;
+    }
+
+    /**
+     * Initialisation de la map
+     * @param ctx le contexte
+     * @param root la View correspondant au fragment courant
+     */
+    private void initMap(Context ctx, View root) {
+        // Initialisation
         map = root.findViewById(R.id.mapview2);
         map.setTileSource(TileSourceFactory.MAPNIK);
         mapController = (MapController) map.getController();
-        mapController.setZoom(18.0);
+        mapController.setZoom(15.0);
 
+        // Permissions
         utilsMap.requestPermissionsIfNecessary((Fragment)this,
                 new String[]{
                         Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE,
-                        Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.INTERNET, ACCESS_FINE_LOCATION},
+                        Manifest.permission.ACCESS_WIFI_STATE, Manifest.permission.INTERNET, Manifest.permission.ACCESS_FINE_LOCATION},
                 LOCATION_PERMISSION_REQUEST_CODE);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.ALWAYS);
         map.setMultiTouchControls(true);
 
-        //GeoPoint startPoint = new GeoPoint(47.214429, -1.558497);
-        //mapController.setCenter(startPoint);
+        CompassOverlay compassOverlay = new CompassOverlay(getContext(), map);
+        compassOverlay.enableCompass();
+        map.getOverlays().add(compassOverlay);
 
+        // Get current position
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        //for now, getLastKnownLocation from GPS only, not from NETWORK
         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return root;
+            return;
         }
         Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (lastLocation == null){
+            lastLocation = new Location("dummyprovider");
             lastLocation.setLongitude(-1.558497);
             lastLocation.setLatitude(47.214429);
         }
-        GeoPoint currentPoint = utilsMap.updateLoc(lastLocation, mapController, map);
+        GeoPoint currentLocation = utilsMap.updateLoc(lastLocation, mapController, map);
 
-        Marker startMarker = new Marker(map);
-        startMarker.setPosition(currentPoint);
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-        map.getOverlays().add(startMarker);
+        // Display current position on the map
+        Marker positionMarker = new Marker(map);
+        positionMarker.setPosition(currentLocation);
+        positionMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
+        positionMarker.setIcon(ctx.getResources().getDrawable(R.drawable.iconhuman));
+        map.getOverlays().add(positionMarker);
 
-        map.getController().setCenter(currentPoint);
+        map.getController().setCenter(currentLocation);
+    }
 
-        return root;
+    /**
+     * Crée une liste de Markers à afficher sur la carte
+     * @param existingMarkers hashMap contenant les id et positions des marqueurs de la base de données
+     * @param ambianceMarkerID liste initialement vide qui contiendra les id des marqueurs correspondants à la sortie
+     * @return la liste des Markers à afficher
+     */
+    private ArrayList<Marker> getPlacesInMarkers(HashMap<Integer, GeoPoint> existingMarkers, ArrayList<Integer> ambianceMarkerID){
+        ArrayList<Marker> markersList = new ArrayList<>();
+        for (Map.Entry mapentry : existingMarkers.entrySet()) {
+            int markerID = (int) mapentry.getKey();
+            GeoPoint currentLocation = (GeoPoint) mapentry.getValue();
+            Marker positionMarker = new Marker(map);
+            positionMarker.setPosition(currentLocation);
+            markersList.add(positionMarker);
+            ambianceMarkerID.add(markerID);
+        }
+        return markersList;
+    }
+
+    /**
+     * Action à réaliser en cliquant sur un marqueur de la carte
+     * @param listMarkers la liste des marqueurs qui sont affichés
+     * @param ambianceMarkerID la liste des id des AmbianceMarkers correspondants
+     */
+    public void actionOnMarkerHit(ArrayList<Marker> listMarkers, ArrayList<Integer> ambianceMarkerID){
+        for (int i = 0 ; i < listMarkers.size(); i++){
+            Marker currentMarker = listMarkers.get(i);
+            int marker_id = ambianceMarkerID.get(i);
+            Bundle bundle = new Bundle();
+            currentMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView map) {
+                    // Envoi de l'id du marqueur sur lequel on a cliqué au fragment suivant
+                    bundle.putInt("key", marker_id);
+                    Navigation.findNavController(map).navigate(R.id.action_navigation_carte_to_navigation_carte2, bundle);
+                    return true;
+                }
+        });
+        }
     }
 
     @Override
@@ -115,13 +169,6 @@ public class CarteFragment extends Fragment {
         super.onResume();
         Context ctx = this.getActivity().getApplicationContext();
         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);

@@ -1,11 +1,9 @@
 package com.example.maramb.ui.saisie;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.app.FragmentTransaction;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,29 +11,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.maramb.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.w3c.dom.Text;
-
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 public class SaisieFragment2 extends Fragment {
 
@@ -53,58 +39,51 @@ public class SaisieFragment2 extends Fragment {
                                 ViewGroup container, Bundle savedInstanceState) {
 
         final View root = inflater.inflate(R.layout.fragment_saisie2, container, false);
-        marqueurs = new ArrayList<>(Arrays. asList(getString(R.string.marqueur1),
-                getString(R.string.marqueur2), getString(R.string.marqueur3)));
+        marqueurs = new ArrayList<>(Arrays. asList(getResources().getStringArray(R.array.marqueurs)));
         Collections.shuffle(marqueurs);
-        imageView = (ImageView) root.findViewById(R.id.imageView);
-        nextButton = (Button) root.findViewById(R.id.nextButton);
-        vote = (SeekBar) root.findViewById(R.id.seekBar);
-        otherButton = (Button) root.findViewById(R.id.otherButton);
-        text = (TextView) root.findViewById(R.id.ambiance);
+        imageView = root.findViewById(R.id.imageView);
+        nextButton = root.findViewById(R.id.nextButton);
+        vote = root.findViewById(R.id.seekBar);
+        otherButton = root.findViewById(R.id.otherButton);
+        text = root.findViewById(R.id.ambiance);
 
         text.setText(marqueurs.get(0));
 
         Bundle bundle = this.getArguments();
         assert bundle != null;
-        byte[] data = bundle.getByteArray("key");
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0,
-                data.length);
-        imageView.setImageBitmap(bitmap);
+        Uri photoUri = Uri.parse(bundle.getString("key"));
+        imageView.setImageURI(photoUri);
 
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                score = vote.getProgress();
-                result.add(score);
-                Bundle bundle2 = new Bundle();
-                bundle2.putByteArray("photo",data);
-                bundle2.putIntegerArrayList("score",result);
-                bundle2.putStringArrayList("marqueurs",marqueurs);
+        nextButton.setOnClickListener(v -> {
+            score = vote.getProgress();
+            result.add(score);
+            Bundle bundle2 = new Bundle();
+            bundle2.putString("photo",photoUri.toString());
+            bundle2.putIntegerArrayList("score",result);
+            bundle2.putStringArrayList("marqueurs",marqueurs);
+            Navigation.findNavController(v).navigate(R.id.action_navigation_saisie_to_saisieFragment3, bundle2);
 
-                Fragment nextFrag = new SaisieFragment3();
-                nextFrag.setArguments(bundle2);
 
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag, "findThisFragment")
-                        .addToBackStack("second")
-                        .commit();
-            }
+
         });
 
-        otherButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                score = vote.getProgress();
-                result.add(score);
-                text.setText(marqueurs.get(result.size()));
-                vote.setProgress(0);
-                if (result.size() == marqueurs.size()-1){
-                    otherButton.setVisibility(View.GONE);
-                }
-
+        otherButton.setOnClickListener(v -> {
+            score = vote.getProgress();
+            result.add(score);
+            text.setText(marqueurs.get(result.size()));
+            vote.setProgress(0);
+            if (result.size() == 4){
+                otherButton.setVisibility(View.GONE);
             }
+
         });
         return root;
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        result = new ArrayList<>();
+        vote.setProgress(0);
+    }
 }

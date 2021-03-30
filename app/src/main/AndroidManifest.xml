@@ -23,6 +23,7 @@
                   android:parentActivityName=".ConnexionActivity"/>
         <activity android:name=".ConnexionActivity" />
 
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.android.fileprovider"

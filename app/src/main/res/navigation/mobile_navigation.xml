@@ -10,6 +10,9 @@
         android:name="com.example.maramb.ui.saisie.SaisieFragment"
         android:label="Saisie"
         tools:layout="@layout/fragment_saisie" >
+        <action
+            android:id="@+id/action_navigation_saisie_to_saisieFragment2"
+            app:destination="@id/navigation_saisie2" />
     </fragment>
 
     <fragment
@@ -24,19 +27,54 @@
         android:label="@string/title_carte"
         tools:layout="@layout/fragment_carte" >
         <action
-            android:id="@+id/action_navigation_carte_to_navigation_ra"
-            app:destination="@id/navigation_ra" />
+            android:id="@+id/action_navigation_carte_to_navigation_carte2"
+            app:destination="@id/navigation_carte2" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_carte2"
+        android:name="com.example.maramb.ui.carte.CarteFragment2"
+        android:label="RA"
+        tools:layout="@layout/fragment_ra" />
 
     <fragment
         android:id="@+id/navigation_compte"
         android:name="com.example.maramb.ui.compte.CompteFragment"
         android:label="@string/title_compte"
-        tools:layout="@layout/fragment_compte" >
-        <action
-            android:id="@+id/action_navigation_compte_to_navigation_carte"
-            app:destination="@id/navigation_carte" />
+        tools:layout="@layout/fragment_compte" />
+
+    <fragment
+        android:id="@+id/navigation_saisie2"
+        android:name="com.example.maramb.ui.saisie.SaisieFragment2"
+        android:label="@layout/fragment_saisie2">
+    <action
+        android:id="@+id/action_navigation_saisie_to_saisieFragment3"
+        app:destination="@id/navigation_saisie3"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/navigation_saisie3"
+        android:name="com.example.maramb.ui.saisie.SaisieFragment3"
+        android:label="@layout/fragment_saisie3">
+        <action
+            android:id="@+id/action_navigation_saisie_to_saisieFragment4"
+            app:destination="@id/navigation_saisie4"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_saisie4"
+        android:name="com.example.maramb.ui.saisie.SaisieFragment4"
+        android:label="@layout/fragment_saisie4">
+    <action
+        android:id="@+id/action_navigation_saisie_to_saisieFragment5"
+        app:destination="@id/navigation_saisie5"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_saisie5"
+        android:name="com.example.maramb.ui.saisie.SaisieFragment5"
+        android:label="@layout/fragment_saisie5"/>
+    <action
+        android:id="@+id/action_navigation_saisie_to_saisieFragment"
+        app:destination="@id/navigation_saisie"/>
 
 </navigation>

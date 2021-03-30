@@ -2,22 +2,33 @@ package com.example.maramb;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.example.maramb.ui.carte.CarteFragment;
+import com.example.maramb.ui.carte.CarteFragment2;
+import com.example.maramb.ui.compte.CompteFragment;
 import com.example.maramb.ui.ra.RaFragment;
 import com.example.maramb.ui.saisie.SaisieFragment;
+import com.example.maramb.ui.saisie.SaisieFragment3;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class  MainActivity extends AppCompatActivity {
+import org.osmdroid.views.overlay.Marker;
 
+public class  MainActivity extends AppCompatActivity {
+    final Fragment fragment1 = new SaisieFragment();
+    final Fragment fragment2 = new RaFragment();
+    final Fragment fragment3 = new CarteFragment();
+    final Fragment fragment4 = new CompteFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active;
     @Override
@@ -37,7 +48,7 @@ public class  MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
         navView.setSelectedItemId(selected_item);
     }
-/*
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -66,5 +77,5 @@ public class  MainActivity extends AppCompatActivity {
             }
             return false;
         }
-    };*/
+    };
 }

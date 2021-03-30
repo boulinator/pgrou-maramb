@@ -1,4 +1,4 @@
-package com.example.maramb;
+package com.example.maramb.utils;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -47,7 +47,6 @@ public class utilsMap {
 
     public static GeoPoint updateLoc(Location loc, MapController mapController, MapView map){
         GeoPoint locGeoPoint = new GeoPoint(loc.getLatitude(), loc.getLongitude());
-        mapController.setCenter(locGeoPoint);
         map.invalidate();
         return locGeoPoint;
     }

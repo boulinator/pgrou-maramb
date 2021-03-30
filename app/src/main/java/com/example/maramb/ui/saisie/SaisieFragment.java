@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.maramb.R;
 
@@ -35,61 +37,50 @@ public class SaisieFragment extends Fragment {
 
     public SaisieFragment(){}
 
-    private SaisieViewModel saisieViewModel;
-    ImageView imageView;
-    ImageButton buttonCamera;
     private String currentPhotoPath;
     private Intent intent;
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
+    private Uri photoURI;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    View root;
+    ImageButton photoButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_saisie, container, false);
-        //imageView = (ImageView)root.findViewById(R.id.imageView);
-        //buttonCamera = root.findViewById(R.id.button_camera);
-        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        root = inflater.inflate(R.layout.fragment_saisie, container, false);
+        photoButton = root.findViewById(R.id.photo_button);
+        photoButton.setOnClickListener(v -> startImageCapture());
+        startImageCapture();
         return root;
-    };
+    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+    public void startImageCapture(){
+        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException ex) {
+            Log.d("photo save error", "erreur dans l'enregistrement de la photo");
+        }
+        if (photoFile != null) {
+            photoURI = FileProvider.getUriForFile(getContext(),
+                    "com.example.android.fileprovider",
+                    photoFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            galleryAddPic();
+        }
+
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode,Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
                 Bundle bundle = new Bundle();
-
-                /*File photoFile = null;
-                try {
-                    File file = createImageFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(getContext(),
-                            "com.example.android.fileprovider",
-                            photoFile);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                }
-
-                galleryAddPic();*/
-
-                SaisieFragment2 nextFrag= new SaisieFragment2();
-
-                Bitmap bmp = (Bitmap) data.getExtras().get("data");
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-                bmp.compress(Bitmap.CompressFormat.PNG,100, stream);
-                byte[] byteArray = stream.toByteArray();
-                bundle.putByteArray("key",byteArray);
-                nextFrag.setArguments(bundle);
-
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.nav_host_fragment, nextFrag, "findThisFragment")
-                        .addToBackStack("premier")
-                        .commit();
+                bundle.putString("key", photoURI.toString());
+                Navigation.findNavController(root).navigate(R.id.action_navigation_saisie_to_saisieFragment2, bundle);
             }
         }
     }
