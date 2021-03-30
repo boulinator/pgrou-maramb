@@ -55,7 +55,7 @@ public class CarteFragment extends Fragment {
         Context ctx = this.getActivity().getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
 
-        // Initialize map and see my position
+        // Initialize map and center on my position
         initMap(ctx, root);
 
         // Get pins for each marker in the db
@@ -74,12 +74,19 @@ public class CarteFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Initialisation de la map
+     * @param ctx le contexte
+     * @param root la View correspondant au fragment courant
+     */
     private void initMap(Context ctx, View root) {
+        // Initialisation
         map = root.findViewById(R.id.mapview2);
         map.setTileSource(TileSourceFactory.MAPNIK);
         mapController = (MapController) map.getController();
         mapController.setZoom(15.0);
 
+        // Permissions
         utilsMap.requestPermissionsIfNecessary((Fragment)this,
                 new String[]{
                         Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE,
@@ -92,9 +99,8 @@ public class CarteFragment extends Fragment {
         compassOverlay.enableCompass();
         map.getOverlays().add(compassOverlay);
 
+        // Get current position
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        // Get location
         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -104,7 +110,6 @@ public class CarteFragment extends Fragment {
             lastLocation.setLongitude(-1.558497);
             lastLocation.setLatitude(47.214429);
         }
-
         GeoPoint currentLocation = utilsMap.updateLoc(lastLocation, mapController, map);
 
         // Display current position on the map
@@ -117,6 +122,12 @@ public class CarteFragment extends Fragment {
         map.getController().setCenter(currentLocation);
     }
 
+    /**
+     * Crée une liste de Markers à afficher sur la carte
+     * @param existingMarkers hashMap contenant les id et positions des marqueurs de la base de données
+     * @param ambianceMarkerID liste initialement vide qui contiendra les id des marqueurs correspondants à la sortie
+     * @return la liste des Markers à afficher
+     */
     private ArrayList<Marker> getPlacesInMarkers(HashMap<Integer, GeoPoint> existingMarkers, ArrayList<Integer> ambianceMarkerID){
         ArrayList<Marker> markersList = new ArrayList<>();
         for (Map.Entry mapentry : existingMarkers.entrySet()) {
@@ -130,6 +141,11 @@ public class CarteFragment extends Fragment {
         return markersList;
     }
 
+    /**
+     * Action à réaliser en cliquant sur un marqueur de la carte
+     * @param listMarkers la liste des marqueurs qui sont affichés
+     * @param ambianceMarkerID la liste des id des AmbianceMarkers correspondants
+     */
     public void actionOnMarkerHit(ArrayList<Marker> listMarkers, ArrayList<Integer> ambianceMarkerID){
         for (int i = 0 ; i < listMarkers.size(); i++){
             Marker currentMarker = listMarkers.get(i);
@@ -138,6 +154,7 @@ public class CarteFragment extends Fragment {
             currentMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView map) {
+                    // Envoi de l'id du marqueur sur lequel on a cliqué au fragment suivant
                     bundle.putInt("key", marker_id);
                     Navigation.findNavController(map).navigate(R.id.action_navigation_carte_to_navigation_carte2, bundle);
                     return true;
