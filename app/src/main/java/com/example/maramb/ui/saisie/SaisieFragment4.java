@@ -39,51 +39,141 @@ import java.sql.Date;
 
 public class SaisieFragment4 extends Fragment{
 
+    /**
+     * L'espace de la photo dans le Layout
+     */
     ImageView photo;
-    TextView marqueur1;
-    TextView marqueur2;
-    TextView marqueur3;
-    TextView marqueur4;
-    TextView marqueur5;
+
+    /**
+     * La première ambiance
+     */
+    TextView ambiance1;
+
+    /**
+     * La deuxième ambiance
+     */
+    TextView ambiance2;
+
+    /**
+     * La troisième ambiance
+     */
+    TextView ambiance3;
+
+    /**
+     * La quatrième ambiance
+     */
+    TextView ambiance4;
+
+    /**
+     * La cinquième ambiance
+     */
+    TextView ambiance5;
+
+    /**
+     * La première barre de note
+     */
     ProgressBar progress1;
+
+    /**
+     * La deuxième barre de note
+     */
     ProgressBar progress2;
+
+    /**
+     * La troisième barre de note
+     */
     ProgressBar progress3;
+
+    /**
+     * La quatrième barre de note
+     */
     ProgressBar progress4;
+
+    /**
+     * La cinquième barre de note
+     */
     ProgressBar progress5;
 
+    /**
+     * Le bouton d'envoi
+     */
     Button sendButton;
-    DBAcces db;
-    ConstraintLayout layout;
 
+    /**
+     * La base de données
+     */
+    DBAcces db;
+
+    /**
+     * La liste des ambiances
+     */
+    ArrayList<String> ambiances;
+
+    /**
+     * La liste des scores
+     */
+    ArrayList<Integer> score;
+
+    /**
+     * L'adresse locale de la photo
+     */
+    Uri photoUri;
+
+    /**
+     * La latitude du marqueur
+     */
+    double latitude;
+
+    /**
+     * La longitude du marqueur
+     */
+    double longitude;
+
+    /**
+     * La localisation du marqueur
+     */
+    GeoPoint location;
+
+    /**
+     * Constructeur du quatrième fragment
+     */
     public SaisieFragment4(){}
 
+
+
+    /**
+     * Création de la vue du quatrième fragment
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return la vue
+     */
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_saisie4, container, false);
         Bundle bundle = this.getArguments();
 
         photo=root.findViewById(R.id.recap_image);
-        marqueur1=root.findViewById(R.id.recap_marqueur1);
-        marqueur2=root.findViewById(R.id.recap_marqueur2);
-        marqueur3=root.findViewById(R.id.recap_marqueur3);
-        marqueur4=root.findViewById(R.id.recap_marqueur4);
-        marqueur5=root.findViewById(R.id.recap_marqueur5);
+        ambiance1=root.findViewById(R.id.recap_marqueur1);
+        ambiance2=root.findViewById(R.id.recap_marqueur2);
+        ambiance3=root.findViewById(R.id.recap_marqueur3);
+        ambiance4=root.findViewById(R.id.recap_marqueur4);
+        ambiance5=root.findViewById(R.id.recap_marqueur5);
         progress1=root.findViewById(R.id.recap_progress1);
         progress2=root.findViewById(R.id.recap_progress2);
         progress3=root.findViewById(R.id.recap_progress3);
         progress4=root.findViewById(R.id.recap_progress4);
         progress5=root.findViewById(R.id.recap_progress5);
         sendButton=root.findViewById(R.id.recap_button_send);
-        layout=root.findViewById(R.id.layout);
         assert bundle != null;
-        Uri photoUri = Uri.parse(bundle.getString("photo"));
+        photoUri = Uri.parse(bundle.getString("photo"));
         photo.setImageURI(photoUri);
 
-        double latitude = bundle.getDouble("latitude");
-        double longitude = bundle.getDouble("longitude");
-        GeoPoint location = new GeoPoint(latitude, longitude);
-        ArrayList<String> marqueurs = bundle.getStringArrayList("marqueurs");
-        ArrayList<Integer> score = bundle.getIntegerArrayList("score");
-        marqueur1.setText(marqueurs.get(0));
+        latitude = bundle.getDouble("latitude");
+        longitude = bundle.getDouble("longitude");
+        location = new GeoPoint(latitude, longitude);
+        ambiances = bundle.getStringArrayList("marqueurs");
+        score = bundle.getIntegerArrayList("score");
+        ambiance1.setText(ambiances.get(0));
         progress1.setProgress(score.get(0));
         progress2.setVisibility(View.GONE);
         progress3.setVisibility(View.GONE);
@@ -93,19 +183,19 @@ public class SaisieFragment4 extends Fragment{
 
         if (score.size()>1){
             progress2.setVisibility(View.VISIBLE);
-            marqueur2.setText(marqueurs.get(1));
+            ambiance2.setText(ambiances.get(1));
             progress2.setProgress(score.get(1));
             if(score.size()>2){
                 progress3.setVisibility(View.VISIBLE);
-                marqueur3.setText(marqueurs.get(2));
+                ambiance3.setText(ambiances.get(2));
                 progress3.setProgress(score.get(2));
                 if(score.size()>3){
                     progress4.setVisibility(View.VISIBLE);
-                    marqueur4.setText(marqueurs.get(3));
+                    ambiance4.setText(ambiances.get(3));
                     progress4.setProgress(score.get(3));
                     if(score.size()>4){
                         progress5.setVisibility(View.VISIBLE);
-                        marqueur5.setText(marqueurs.get(4));
+                        ambiance5.setText(ambiances.get(4));
                         progress5.setProgress(score.get(4));
                     }
                 }
@@ -113,37 +203,46 @@ public class SaisieFragment4 extends Fragment{
         }
 
 
-        sendButton.setOnClickListener(v -> {
-            InputStream iStream = null;
-            try {
-                iStream = getActivity().getContentResolver().openInputStream(photoUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            try {
-                db = new DBAcces();
-                Connection con = db.connect();
-                ArrayList place = db.locationToPlace(con, latitude,longitude);
-                String placeName = place.get(0).toString();
-                int placeID = (Integer)place.get(1);
-                Date date = new Date(Calendar.getInstance().getTime().getTime());
-                byte[] inputData;
-                inputData = getBytes(iStream);
-                AmbianceMarker marker = new AmbianceMarker(0,location,placeName,marqueurs,score, date,inputData,0,placeID);
-                db.writeMarker(con, marker);
-                Navigation.findNavController(root).navigate(R.id.action_navigation_saisie_to_saisieFragment5);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(),"Echec de l'envoi du marqueur", Toast.LENGTH_SHORT).show();
-            }
-
-
-
-        });
+        sendButton.setOnClickListener(this::sendToDb);
 
         return root;
     }
 
+    /**
+     * Méthode permettant l'envoi des données à la base de données
+     * @param v vue
+     */
+    public void sendToDb(View v){
+        InputStream iStream = null;
+        try {
+            iStream = getActivity().getContentResolver().openInputStream(photoUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            db = new DBAcces();
+            Connection con = db.connect();
+            ArrayList place = db.locationToPlace(con, latitude,longitude);
+            String placeName = place.get(0).toString();
+            int placeID = (Integer)place.get(1);
+            Date date = new Date(Calendar.getInstance().getTime().getTime());
+            byte[] inputData;
+            inputData = getBytes(iStream);
+            AmbianceMarker marker = new AmbianceMarker(0,location,placeName,ambiances,score, date,inputData,0,placeID);
+            db.writeMarker(con, marker);
+            Navigation.findNavController(v).navigate(R.id.action_navigation_saisie_to_saisieFragment5);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),"Echec de l'envoi du marqueur", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Conversion d'un InputStream en ByteArray
+     * @param inputStream
+     * @return le ByteArray de photo
+     * @throws IOException
+     */
     public byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
         int bufferSize = 1024;

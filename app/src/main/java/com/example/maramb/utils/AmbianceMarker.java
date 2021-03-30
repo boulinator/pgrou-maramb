@@ -13,28 +13,69 @@ import java.util.List;
 
 public class AmbianceMarker {
 
+    /**
+     * L'ID du marqueur
+     */
     private int markerID;
 
+    /**
+     * La localisation du marqeur
+     */
     private GeoPoint location;
 
+    /**
+     * Le nom de la place du marqueur
+     */
     private String placeName;
 
-    // Mots utilisé pour décrire l'endroit :
+    /**
+     * Les ambiances utilisés pour décrire le marqueur
+     */
     private ArrayList<String> ambianceNames;
 
-    // Scores pour chaque mot :
+    /**
+     * Le score des ambiances
+     */
     private ArrayList<Integer> scores;
 
+    /**
+     * La date de création du marqueur
+     */
     private Date date;
 
+    /**
+     * La photo associée au marqueur
+     */
     private byte[] photo;
 
+    /**
+     * L'ID de l'utilisateur
+     */
     private int userID;
 
+    /**
+     * L'id de la place du marqueur
+     */
     private int placeID;
 
+
+    /**
+     * Constructeur du marqueur vide
+     */
     public AmbianceMarker(){}
 
+    /**
+     * Constructeur du marqueur avec paramètres
+     * @param markerID
+     * @param location
+     * @param placeName
+     * @param ambianceNames
+     * @param scores
+     * @param date
+     * @param photo
+     * @param userID
+     * @param placeID
+     */
     public AmbianceMarker(int markerID, GeoPoint location, String placeName, ArrayList<String> ambianceNames, ArrayList<Integer> scores, Date date, byte[] photo, int userID, int placeID) {
 
         this.markerID = markerID;

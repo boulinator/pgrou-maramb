@@ -35,15 +35,43 @@ import java.util.Date;
 
 public class SaisieFragment extends Fragment {
 
+    /**
+     * Constructeur du premier fragment
+     */
     public SaisieFragment(){}
 
+    /**
+     * Le chemin d'accès à la photo
+     */
     private String currentPhotoPath;
-    private Intent intent;
+
+    /**
+     * L'adresse locale de la photo
+     */
     private Uri photoURI;
+
+    /**
+     * Le code pour prendre une photo
+     */
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    /**
+     * La vue du fragment
+     */
     View root;
+
+    /**
+     * Le bouton permettant de lancer l'appareil photo (en cas de retour dans l'application)
+     */
     ImageButton photoButton;
 
+    /**
+     * Création de la vue du premier fragment de saisie
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return la vue
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_saisie, container, false);
@@ -54,8 +82,11 @@ public class SaisieFragment extends Fragment {
     }
 
 
+    /**
+     * Méthode pour prendre la photo et la sauvegarder
+     */
     public void startImageCapture(){
-        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         File photoFile = null;
         try {
@@ -75,6 +106,12 @@ public class SaisieFragment extends Fragment {
     }
 
 
+    /**
+     * Méthode pour démarrer le second fragment en envoyant l'adresse de la photo lorsque la photo est prise
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     public void onActivityResult(int requestCode, int resultCode,Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -85,6 +122,11 @@ public class SaisieFragment extends Fragment {
         }
     }
 
+    /**
+     * Méthode pour créer le fichier de l'image
+     * @return le fichier image
+     * @throws IOException
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -101,6 +143,9 @@ public class SaisieFragment extends Fragment {
         return image;
     }
 
+    /**
+     * Méthode pour ajouter une photo à la galerie du téléphone
+     */
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(currentPhotoPath);

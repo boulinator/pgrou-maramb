@@ -14,20 +14,53 @@ import java.util.HashMap;
 
 public class DBAcces {
 
+    /**
+     * L'URL de la base de données
+     */
     String url = "jdbc:postgresql://ser-info-03.ec-nantes.fr:5432/maramb";
+
+    /**
+     * L'utilisateur de la base de données
+     */
     String user = "maramb";
+
+    /**
+     * Le mot de passe de la base de données
+     */
     String pass = "lepetitcheval";
+
+    /**
+     * La connection à la base de données
+     */
     private Connection connection;
+
+    /**
+     * Les statuts de la base de données
+     */
     private boolean status;
+
+    /**
+     * La place d'un marqueur
+     */
     String place;
+
+    /**
+     * Liste renvoyée
+     */
     ArrayList returned;
 
+    /**
+     * Constructeur de DBAcces
+     */
     public DBAcces() {
         connect();
         System.out.println("connection status:" + status);
     }
 
-
+    /**
+     * Connexion à la base
+     * @return la connexion
+     */
     public Connection connect() {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -54,18 +87,14 @@ public class DBAcces {
         return connection;
     }
 
-    public Connection getExtraConnection() {
-        Connection c = null;
-        try {
-            Class.forName("org.postgresql.Driver");
-            c = DriverManager.getConnection(url, user, pass);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        return c;
-    }
-
+    /**
+     * Récupération de la place à partir d'une localisation
+     * @param con connexion
+     * @param lati latitude du point
+     * @param longi longitude du point
+     * @return le nom et l'ID de la place
+     */
     public ArrayList locationToPlace(Connection con, double lati, double longi) {
         Thread thread = new Thread(new Runnable(){
             @Override
@@ -108,6 +137,11 @@ public class DBAcces {
         return returned;
     }
 
+    /**
+     * Ecritue d'un marqueur dans la base
+     * @param con connexion
+     * @param marker le marqueur a ecrire dans la base
+     */
     public void writeMarker(Connection con, AmbianceMarker marker){
         Thread thread = new Thread(new Runnable(){
             @Override
@@ -172,6 +206,11 @@ public class DBAcces {
         }
     }
 
+    /***
+     * Methode pour recuperer un marqueur par son ID
+     * @param marqueur_id l'ID du marqueur
+     * @return un marqueur
+     */
     public AmbianceMarker getMarkerById(int marqueur_id){
         AmbianceMarker currentAmbianceMarker = new AmbianceMarker();
         currentAmbianceMarker.setMarkerID(marqueur_id);
@@ -260,6 +299,7 @@ public class DBAcces {
 
         return currentAmbianceMarker;
     }
+
 
     public HashMap<Integer, GeoPoint> getLocationsAndMarkersID(){
         HashMap<Integer, GeoPoint> existingMarkers = new HashMap<Integer, GeoPoint>();

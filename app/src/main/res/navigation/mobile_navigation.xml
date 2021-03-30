@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_saisie"
         android:name="com.example.maramb.ui.saisie.SaisieFragment"
-        android:label="Saisie"
+        android:label="@string/saisiemarqueur"
         tools:layout="@layout/fragment_saisie" >
         <action
             android:id="@+id/action_navigation_saisie_to_saisieFragment2"
@@ -46,7 +46,8 @@
     <fragment
         android:id="@+id/navigation_saisie2"
         android:name="com.example.maramb.ui.saisie.SaisieFragment2"
-        android:label="@layout/fragment_saisie2">
+        android:label="@string/saisiemarqueur"
+        tools:layout="@layout/fragment_saisie2">
     <action
         android:id="@+id/action_navigation_saisie_to_saisieFragment3"
         app:destination="@id/navigation_saisie3"/>
@@ -55,7 +56,8 @@
     <fragment
         android:id="@+id/navigation_saisie3"
         android:name="com.example.maramb.ui.saisie.SaisieFragment3"
-        android:label="@layout/fragment_saisie3">
+        android:label="@string/saisiemarqueur"
+        tools:layout="@layout/fragment_saisie3">
         <action
             android:id="@+id/action_navigation_saisie_to_saisieFragment4"
             app:destination="@id/navigation_saisie4"/>
@@ -64,7 +66,8 @@
     <fragment
         android:id="@+id/navigation_saisie4"
         android:name="com.example.maramb.ui.saisie.SaisieFragment4"
-        android:label="@layout/fragment_saisie4">
+        android:label="@string/saisiemarqueur"
+        tools:layout="@layout/fragment_saisie4">
     <action
         android:id="@+id/action_navigation_saisie_to_saisieFragment5"
         app:destination="@id/navigation_saisie5"/>
@@ -72,9 +75,11 @@
     <fragment
         android:id="@+id/navigation_saisie5"
         android:name="com.example.maramb.ui.saisie.SaisieFragment5"
-        android:label="@layout/fragment_saisie5"/>
+        android:label="@string/saisiemarqueur"
+        tools:layout="@layout/fragment_saisie5">
     <action
         android:id="@+id/action_navigation_saisie_to_saisieFragment"
         app:destination="@id/navigation_saisie"/>
+    </fragment>
 
 </navigation>

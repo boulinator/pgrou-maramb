@@ -15,7 +15,18 @@ import com.example.maramb.R;
 
 public class SaisieFragment5 extends Fragment {
 
+    /**
+     * Le bouton pour créer un nouveau marqueur
+     */
     Button newButton;
+
+    /**
+     * Création de la vue du fragment
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return la vue du fragment
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
