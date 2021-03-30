@@ -57,4 +57,26 @@
         <item name="desert">Désert</item>
     </string-array>
 
+    <string name="connexion_nomUtilisateur">Nom d\'utilisateur</string>
+    <string name="connexion_mdp">Mot de passe</string>
+    <string name="connexion_connexion">Connexion</string>
+    <string name="connexion_nouvCompte">Créer un compte</string>
+    <string name="connexion_textIdentifiants">Identifiants</string>
+    <string name="connexion_prenom">Prénom</string>
+    <string name="connexion_nom">Nom</string>
+    <string name="connexion_informations">Informations</string>
+    <string name="connexion_numTel">Numéro de téléphone</string>
+    <string name="connexion_msg_succes">Connexion réussie !</string>
+    <string name="connexion_msg_echec">Echec de la connexion</string>
+    <string name="creer_compte_confmdp">Confirmation mot de passe</string>
+    <string name="creer_compte_error_mdp">Vous avez entré deux mots de passe différents !</string>
+    <string name="creer_compte_error_used_tel">Ce numéro de téléphone est déjà utilisé.</string>
+    <string name="creer_compte_error_used_id">Cet identifiant existe déjà.</string>
+    <string name="creer_compte_error_used_mail">Cette adresse mail est déjà utilisée.</string>
+    <string name="creer_compte_error_mail">L\'adresse mail est incorrecte.</string>
+    <string name="creer_compte_error_tel">Le numéro de téléphone est incorrect.</string>
+    <string name="creer_compte_validation">Le compte est créée !</string>
+    <string name="creer_compte_errorbdd">Erreur : l\'écriture en base de donnée a échoué.</string>
+    <string name="creer_compte_email">Email</string>
+    <string name="connexion_contact">Contact</string>
 </resources>

@@ -6,7 +6,6 @@ import android.view.MenuItem;
 
 import com.example.maramb.ui.carte.CarteFragment;
 import com.example.maramb.ui.carte.CarteFragment2;
-import com.example.maramb.ui.compte.CompteFragment;
 import com.example.maramb.ui.ra.RaFragment;
 import com.example.maramb.ui.saisie.SaisieFragment;
 import com.example.maramb.ui.saisie.SaisieFragment3;
@@ -28,7 +27,6 @@ public class  MainActivity extends AppCompatActivity {
     final Fragment fragment1 = new SaisieFragment();
     final Fragment fragment2 = new RaFragment();
     final Fragment fragment3 = new CarteFragment();
-    final Fragment fragment4 = new CompteFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active;
     @Override
@@ -71,8 +69,8 @@ public class  MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.navigation_compte:
-                    fm.beginTransaction().hide(active).show(fragment4).commit();
-                    active = fragment4;
+                    Intent intent = new Intent(MainActivity.this, ConnexionActivity.class);
+                    startActivity(intent);
                     return true;
             }
             return false;

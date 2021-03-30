@@ -87,6 +87,15 @@ public class DBAcces {
         return connection;
     }
 
+    public Connection getExtraConnection() {
+        Connection c = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(url, user, pass);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Récupération de la place à partir d'une localisation
@@ -206,10 +215,10 @@ public class DBAcces {
         }
     }
 
-    /***
-     * Methode pour recuperer un marqueur par son ID
-     * @param marqueur_id l'ID du marqueur
-     * @return un marqueur
+    /**
+     * Réalise un appel à la BDD pour remplir les attributs d'un AmbianceMarker
+     * @param marqueur_id l'id du marqueur à chercher dans la BDD
+     * @return l'AmbianceMarker de la bdd dont le marqueur_id correspond au paramètre d'entrée
      */
     public AmbianceMarker getMarkerById(int marqueur_id){
         AmbianceMarker currentAmbianceMarker = new AmbianceMarker();
@@ -300,7 +309,12 @@ public class DBAcces {
         return currentAmbianceMarker;
     }
 
-
+    /**
+     * Réalise un appel à la BDD pour récupérer, pour chaque marqueur, son id et sa localisation
+     * Ces informations sont stockées dans une hashMap existingMarkers, dont la clé correspond à l'id du marqueur
+     * et la valeur à un GeoPoint correspondant à la position du marqueur
+     * @return existingMarkers
+     */
     public HashMap<Integer, GeoPoint> getLocationsAndMarkersID(){
         HashMap<Integer, GeoPoint> existingMarkers = new HashMap<Integer, GeoPoint>();
         Thread thread = new Thread(new Runnable(){

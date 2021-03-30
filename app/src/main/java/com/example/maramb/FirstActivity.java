@@ -48,7 +48,7 @@ public class FirstActivity extends AppCompatActivity {
 
         compteLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent myIntent = new Intent(FirstActivity.this, MainActivity.class);
+                Intent myIntent = new Intent(FirstActivity.this, ConnexionActivity.class);
                 myIntent.putExtra("key", R.id.navigation_compte);
                 startActivity(myIntent);
             }
