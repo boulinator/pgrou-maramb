@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class DBAcces {
 
     /**
-     * L'URL de la base de données
+     * L'URL de la base de donnees
      */
     String url = "jdbc:postgresql://ser-info-03.ec-nantes.fr:5432/maramb";
 
@@ -221,9 +221,9 @@ public class DBAcces {
     }
 
     /**
-     * Réalise un appel a la BDD pour remplir les attributs d'un AmbianceMarker
+     * Realise un appel a la BDD pour remplir les attributs d'un AmbianceMarker
      * @param marqueur_id l'id du marqueur a chercher dans la BDD
-     * @return l'AmbianceMarker de la bdd dont le marqueur_id correspond au parametre d'entrée
+     * @return l'AmbianceMarker de la bdd dont le marqueur_id correspond au parametre d'entree
      */
     public AmbianceMarker getMarkerById(int marqueur_id){
         AmbianceMarker currentAmbianceMarker = new AmbianceMarker();
@@ -315,8 +315,8 @@ public class DBAcces {
     }
 
     /**
-     * Réalise un appel a la BDD pour récupérer, pour chaque marqueur, son id et sa localisation
-     * Ces informations sont stockées dans une hashMap existingMarkers, dont la clé correspond a l'id du marqueur
+     * Realise un appel a la BDD pour recuperer, pour chaque marqueur, son id et sa localisation
+     * Ces informations sont stockees dans une hashMap existingMarkers, dont la cle correspond a l'id du marqueur
      * et la valeur a un GeoPoint correspondant a la position du marqueur
      * @return existingMarkers
      */

@@ -100,7 +100,7 @@ public class SaisieFragment4 extends Fragment{
     Button sendButton;
 
     /**
-     * La base de données
+     * La base de donnees
      */
     DBAcces db;
 
@@ -142,7 +142,7 @@ public class SaisieFragment4 extends Fragment{
 
 
     /**
-     * Création de la vue du quatrieme fragment
+     * Creation de la vue du quatrieme fragment
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -209,7 +209,7 @@ public class SaisieFragment4 extends Fragment{
     }
 
     /**
-     * Méthode permettant l'envoi des données a la base de données
+     * Methode permettant l'envoi des donnees a la base de donnees
      * @param v vue
      */
     public void sendToDb(View v){

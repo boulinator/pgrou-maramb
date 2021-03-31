@@ -66,7 +66,7 @@ public class SaisieFragment extends Fragment {
     ImageButton photoButton;
 
     /**
-     * Création de la vue du premier fragment de saisie
+     * Creation de la vue du premier fragment de saisie
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -83,7 +83,7 @@ public class SaisieFragment extends Fragment {
 
 
     /**
-     * Méthode pour prendre la photo et la sauvegarder
+     * Methode pour prendre la photo et la sauvegarder
      */
     public void startImageCapture(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -107,7 +107,7 @@ public class SaisieFragment extends Fragment {
 
 
     /**
-     * Méthode pour démarrer le second fragment en envoyant l'adresse de la photo lorsque la photo est prise
+     * Methode pour démarrer le second fragment en envoyant l'adresse de la photo lorsque la photo est prise
      * @param requestCode
      * @param resultCode
      * @param data
@@ -123,7 +123,7 @@ public class SaisieFragment extends Fragment {
     }
 
     /**
-     * Méthode pour créer le fichier de l'image
+     * Methode pour creer le fichier de l'image
      * @return le fichier image
      * @throws IOException
      */
@@ -144,7 +144,7 @@ public class SaisieFragment extends Fragment {
     }
 
     /**
-     * Méthode pour ajouter une photo a la galerie du téléphone
+     * Methode pour ajouter une photo a la galerie du telephone
      */
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);

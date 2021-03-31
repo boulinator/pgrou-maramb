@@ -68,7 +68,7 @@ public class SaisieFragment3 extends Fragment {
     private Button nextButton;
 
     /**
-     * Client permettant l'acces a la localisation du téléphone
+     * Client permettant l'acces a la localisation du telephone
      */
     private FusedLocationProviderClient client;
 
@@ -94,7 +94,7 @@ public class SaisieFragment3 extends Fragment {
 
 
     /**
-     * Création de la vue du troisieme fragment
+     * Creation de la vue du troisieme fragment
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -144,7 +144,7 @@ public class SaisieFragment3 extends Fragment {
 
 
     /**
-     * Création de la carte
+     * Creation de la carte
      * @param ctx contexte
      */
     public void initMap(Context ctx){
@@ -187,7 +187,7 @@ public class SaisieFragment3 extends Fragment {
     }
 
     /**
-     * Démarre le nouveau fragment en ajoutant au bundle la localisation
+     * Demarre le nouveau fragment en ajoutant au bundle la localisation
      * @param v vue
      */
     public void nextFrag(View v){
@@ -203,7 +203,7 @@ public class SaisieFragment3 extends Fragment {
     }
 
     /**
-     * Récupération de la localisation du téléphone
+     * Recuperation de la localisation du telephone
      */
     @SuppressLint("MissingPermission")
     private void getCurrentLocation(){

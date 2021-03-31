@@ -29,7 +29,7 @@ public class AmbianceMarker {
     private String placeName;
 
     /**
-     * Les ambiances utilisés pour décrire le marqueur
+     * Les ambiances utilises pour decrire le marqueur
      */
     private ArrayList<String> ambianceNames;
 
@@ -39,12 +39,12 @@ public class AmbianceMarker {
     private ArrayList<Integer> scores;
 
     /**
-     * La date de création du marqueur
+     * La date de creation du marqueur
      */
     private Date date;
 
     /**
-     * La photo associée au marqueur
+     * La photo associee au marqueur
      */
     private byte[] photo;
 

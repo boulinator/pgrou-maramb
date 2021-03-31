@@ -117,8 +117,8 @@ public class SaisieFragment2 extends Fragment {
     }
 
     /**
-     * Récupération et envoi au nouveau fragment des listes et de l'adresse de la photo
-     * Création du nouveau fragment
+     * Recuperation et envoi au nouveau fragment des listes et de l'adresse de la photo
+     * Creation du nouveau fragment
      * @param v
      */
     public void nextFrag(View v){
@@ -132,7 +132,7 @@ public class SaisieFragment2 extends Fragment {
     }
 
     /**
-     * Stockage de la note affectée a l'ambiance. Mise a jour du texte avec l'ambiance suivante
+     * Stockage de la note affectee a l'ambiance. Mise a jour du texte avec l'ambiance suivante
      * Disparition du bouton a la cinquieme ambiance
      */
     public void newAmbiance(){
