@@ -16,12 +16,12 @@ import com.example.maramb.R;
 public class SaisieFragment5 extends Fragment {
 
     /**
-     * Le bouton pour créer un nouveau marqueur
+     * Le bouton pour creer un nouveau marqueur
      */
     Button newButton;
 
     /**
-     * Création de la vue du fragment
+     * Creation de la vue du fragment
      * @param inflater
      * @param container
      * @param savedInstanceState

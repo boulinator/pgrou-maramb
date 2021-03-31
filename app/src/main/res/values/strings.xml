@@ -25,12 +25,12 @@
 
     <string name="other">Valider et saisir une autre ambiance</string>
     <string name="envoyer_marqueur">Envoyer mon marqueur</string>
-    <string name="recap_image">Image récapitulatif</string>
+    <string name="recap_image">Image recapitulatif</string>
 
     <string name="marqueur_lieu">Lieu du marqueur</string>
     <string name="infosMarqueur">Informations sur le marqueur</string>
 
-    <string name="finmarqueur">Envoi du marqueur réussi !</string>
+    <string name="finmarqueur">Envoi du marqueur reussi !</string>
     <string name="newmarker">Nouveau marqueur</string>
     <string name="takepicture">Prendre une photo</string>
     <string name="saisiemarqueur">Saisie de marqueur d\'ambiance</string>

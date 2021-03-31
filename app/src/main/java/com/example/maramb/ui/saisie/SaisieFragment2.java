@@ -48,7 +48,7 @@ public class SaisieFragment2 extends Fragment {
     Button otherButton;
 
     /**
-     * Le texte décrivant l'ambiance
+     * Le texte decrivant l'ambiance
      */
     TextView text;
 
@@ -74,10 +74,10 @@ public class SaisieFragment2 extends Fragment {
 
 
     /**
-     * Création de la vue du deuxième fragment
-     * Création des listes et mélange de la liste d'ambiance
+     * Creation de la vue du deuxieme fragment
+     * Creation des listes et melange de la liste d'ambiance
      * Affichage de la photo
-     * Mise en place des onClickListener des différents boutons
+     * Mise en place des onClickListener des differents boutons
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -107,7 +107,7 @@ public class SaisieFragment2 extends Fragment {
     }
 
     /**
-     * On vide la liste de résultats et on remet la bare de note à 0 au redémarrage du fragment
+     * On vide la liste de resultats et on remet la bare de note a 0 au redémarrage du fragment
      */
     @Override
     public void onResume() {
@@ -132,8 +132,8 @@ public class SaisieFragment2 extends Fragment {
     }
 
     /**
-     * Stockage de la note affectée à l'ambiance. Mise à jour du texte avec l'ambiance suivante
-     * Disparition du bouton à la cinquième ambiance
+     * Stockage de la note affectée a l'ambiance. Mise a jour du texte avec l'ambiance suivante
+     * Disparition du bouton a la cinquieme ambiance
      */
     public void newAmbiance(){
         score = vote.getProgress();

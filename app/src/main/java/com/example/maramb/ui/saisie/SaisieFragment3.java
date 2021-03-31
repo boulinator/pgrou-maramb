@@ -63,12 +63,12 @@ public class SaisieFragment3 extends Fragment {
     private ImageButton nearMe;
 
     /**
-     *  Le bouton pour passer à la suite
+     *  Le bouton pour passer a la suite
      */
     private Button nextButton;
 
     /**
-     * Client permettant l'accès à la localisation du téléphone
+     * Client permettant l'acces a la localisation du téléphone
      */
     private FusedLocationProviderClient client;
 
@@ -83,7 +83,7 @@ public class SaisieFragment3 extends Fragment {
     GeoPoint point;
 
     /**
-     * Le Bundle pour passer les information d'un fragment à un autre
+     * Le Bundle pour passer les information d'un fragment a un autre
      */
     Bundle bundle;
 
@@ -94,7 +94,7 @@ public class SaisieFragment3 extends Fragment {
 
 
     /**
-     * Création de la vue du troisième fragment
+     * Création de la vue du troisieme fragment
      * @param inflater
      * @param container
      * @param savedInstanceState

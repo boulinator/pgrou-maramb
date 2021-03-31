@@ -45,52 +45,52 @@ public class SaisieFragment4 extends Fragment{
     ImageView photo;
 
     /**
-     * La première ambiance
+     * La premiere ambiance
      */
     TextView ambiance1;
 
     /**
-     * La deuxième ambiance
+     * La deuxieme ambiance
      */
     TextView ambiance2;
 
     /**
-     * La troisième ambiance
+     * La troisieme ambiance
      */
     TextView ambiance3;
 
     /**
-     * La quatrième ambiance
+     * La quatrieme ambiance
      */
     TextView ambiance4;
 
     /**
-     * La cinquième ambiance
+     * La cinquieme ambiance
      */
     TextView ambiance5;
 
     /**
-     * La première barre de note
+     * La premiere barre de note
      */
     ProgressBar progress1;
 
     /**
-     * La deuxième barre de note
+     * La deuxieme barre de note
      */
     ProgressBar progress2;
 
     /**
-     * La troisième barre de note
+     * La troisieme barre de note
      */
     ProgressBar progress3;
 
     /**
-     * La quatrième barre de note
+     * La quatrieme barre de note
      */
     ProgressBar progress4;
 
     /**
-     * La cinquième barre de note
+     * La cinquieme barre de note
      */
     ProgressBar progress5;
 
@@ -135,14 +135,14 @@ public class SaisieFragment4 extends Fragment{
     GeoPoint location;
 
     /**
-     * Constructeur du quatrième fragment
+     * Constructeur du quatrieme fragment
      */
     public SaisieFragment4(){}
 
 
 
     /**
-     * Création de la vue du quatrième fragment
+     * Création de la vue du quatrieme fragment
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -209,7 +209,7 @@ public class SaisieFragment4 extends Fragment{
     }
 
     /**
-     * Méthode permettant l'envoi des données à la base de données
+     * Méthode permettant l'envoi des données a la base de données
      * @param v vue
      */
     public void sendToDb(View v){
@@ -229,7 +229,7 @@ public class SaisieFragment4 extends Fragment{
             byte[] inputData;
             inputData = getBytes(iStream);
             AmbianceMarker marker = new AmbianceMarker(0,location,placeName,ambiances,score, date,inputData,0,placeID);
-            db.writeMarker(con, marker);
+            db.writeMarker(con, marker,getContext());
             Navigation.findNavController(v).navigate(R.id.action_navigation_saisie_to_saisieFragment5);
         } catch (IOException e) {
             e.printStackTrace();

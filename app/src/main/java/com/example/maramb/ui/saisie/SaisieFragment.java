@@ -41,7 +41,7 @@ public class SaisieFragment extends Fragment {
     public SaisieFragment(){}
 
     /**
-     * Le chemin d'accès à la photo
+     * Le chemin d'acces a la photo
      */
     private String currentPhotoPath;
 
@@ -144,7 +144,7 @@ public class SaisieFragment extends Fragment {
     }
 
     /**
-     * Méthode pour ajouter une photo à la galerie du téléphone
+     * Méthode pour ajouter une photo a la galerie du téléphone
      */
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);

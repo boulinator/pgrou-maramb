@@ -23,22 +23,22 @@ public class DBAcces {
     String url = "jdbc:postgresql://ser-info-03.ec-nantes.fr:5432/maramb";
 
     /**
-     * L'utilisateur de la base de données
+     * L'utilisateur de la base de donnees
      */
     String user = "maramb";
 
     /**
-     * Le mot de passe de la base de données
+     * Le mot de passe de la base de donnees
      */
     String pass = "lepetitcheval";
 
     /**
-     * La connection à la base de données
+     * La connection a la base de donnees
      */
     private Connection connection;
 
     /**
-     * Les statuts de la base de données
+     * Les statuts de la base de donnees
      */
     private boolean status;
 
@@ -48,7 +48,7 @@ public class DBAcces {
     String place;
 
     /**
-     * Liste renvoyée
+     * Liste renvoyee
      */
     ArrayList returned;
 
@@ -61,7 +61,7 @@ public class DBAcces {
     }
 
     /**
-     * Connexion à la base
+     * Connexion a la base
      * @return la connexion
      */
     public Connection connect() {
@@ -102,7 +102,7 @@ public class DBAcces {
     }
 
     /**
-     * Récupération de la place à partir d'une localisation
+     * Recuperation de la place a partir d'une localisation
      * @param con connexion
      * @param lati latitude du point
      * @param longi longitude du point
@@ -133,7 +133,7 @@ public class DBAcces {
                     returned.add(placeid);
                     System.out.println(rs.getString("placelibelle"));
 
-                    System.out.println("Connection fermée");
+                    System.out.println("Connection fermee");
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
@@ -221,9 +221,9 @@ public class DBAcces {
     }
 
     /**
-     * Réalise un appel à la BDD pour remplir les attributs d'un AmbianceMarker
-     * @param marqueur_id l'id du marqueur à chercher dans la BDD
-     * @return l'AmbianceMarker de la bdd dont le marqueur_id correspond au paramètre d'entrée
+     * Réalise un appel a la BDD pour remplir les attributs d'un AmbianceMarker
+     * @param marqueur_id l'id du marqueur a chercher dans la BDD
+     * @return l'AmbianceMarker de la bdd dont le marqueur_id correspond au parametre d'entrée
      */
     public AmbianceMarker getMarkerById(int marqueur_id){
         AmbianceMarker currentAmbianceMarker = new AmbianceMarker();
@@ -315,9 +315,9 @@ public class DBAcces {
     }
 
     /**
-     * Réalise un appel à la BDD pour récupérer, pour chaque marqueur, son id et sa localisation
-     * Ces informations sont stockées dans une hashMap existingMarkers, dont la clé correspond à l'id du marqueur
-     * et la valeur à un GeoPoint correspondant à la position du marqueur
+     * Réalise un appel a la BDD pour récupérer, pour chaque marqueur, son id et sa localisation
+     * Ces informations sont stockées dans une hashMap existingMarkers, dont la clé correspond a l'id du marqueur
+     * et la valeur a un GeoPoint correspondant a la position du marqueur
      * @return existingMarkers
      */
     public HashMap<Integer, GeoPoint> getLocationsAndMarkersID(){

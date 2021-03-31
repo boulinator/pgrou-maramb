@@ -65,7 +65,7 @@ public class AmbianceMarker {
     public AmbianceMarker(){}
 
     /**
-     * Constructeur du marqueur avec paramètres
+     * Constructeur du marqueur avec parametres
      * @param markerID
      * @param location
      * @param placeName

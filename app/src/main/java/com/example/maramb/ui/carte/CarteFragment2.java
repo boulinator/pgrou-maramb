@@ -58,10 +58,10 @@ public class CarteFragment2 extends Fragment {
         progress5=root.findViewById(R.id.mot_progress5);
         layout=root.findViewById(R.id.layout);
         assert bundle != null;
-        // on récupère l'id du marqueur sur lequel on a cliqué
+        // on recupere l'id du marqueur sur lequel on a cliqué
         int marker_id = bundle.getInt("key");
 
-        // On récupère la totalité des informations du marqueurs grâce à un appel à la bdd
+        // On recupere la totalité des informations du marqueurs grâce à un appel à la bdd
         db = new DBAcces();
         AmbianceMarker currentMarker = db.getMarkerById(marker_id);
 
